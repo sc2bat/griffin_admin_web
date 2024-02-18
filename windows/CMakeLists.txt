@@ -4,7 +4,7 @@ project(admin_web_app LANGUAGES CXX)
 
 # The name of the executable created for the application. Change this to change
 # the on-disk name of your application.
-set(BINARY_NAME "admin_web_app")
+set(BINARY_NAME "Griffin Amdin Web")
 
 # Explicitly opt in to modern CMake behaviors to avoid warnings with recent
 # versions of CMake.

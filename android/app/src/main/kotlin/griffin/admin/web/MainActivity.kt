@@ -1,4 +1,4 @@
-package com.example.admin_web_app
+package griffin.admin.web
 
 import io.flutter.embedding.android.FlutterActivity
 
