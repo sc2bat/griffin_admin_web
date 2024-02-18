@@ -35,7 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (index, _) {
           sideMenu.changePage(index);
         },
-        icon: const Icon(Icons.home),
+        icon: const Icon(Icons.flight),
         badgeContent: const Text(
           '2',
           style: TextStyle(color: Colors.white),
@@ -46,7 +46,7 @@ class _HomeScreenState extends State<HomeScreen> {
         onTap: (index, _) {
           sideMenu.changePage(index);
         },
-        icon: const Icon(Icons.home),
+        icon: const Icon(Icons.airplane_ticket_outlined),
         badgeContent: const Text(
           '3',
           style: TextStyle(color: Colors.white),
