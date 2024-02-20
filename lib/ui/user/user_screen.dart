@@ -16,7 +16,7 @@ class _UserScreenState extends State<UserScreen> {
     Future.microtask(() {
       final UserViewModel userViewModel = context.read<UserViewModel>();
 
-      userViewModel.getUserList();
+      // userViewModel.getUserList();
     });
     super.initState();
   }

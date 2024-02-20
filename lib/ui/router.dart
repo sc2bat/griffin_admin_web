@@ -1,5 +1,6 @@
 import 'package:admin_web_app/di/di_setup.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
+import 'package:admin_web_app/ui/splash/index_screen.dart';
 import 'package:admin_web_app/ui/user/user_screen.dart';
 import 'package:admin_web_app/ui/user/user_view_model.dart';
 import 'package:go_router/go_router.dart';
@@ -11,9 +12,7 @@ final router = GoRouter(
     GoRoute(
       name: 'splash',
       path: '/splash',
-      builder: (_, __) => const MyHomePage(
-        title: 'splash',
-      ),
+      builder: (_, __) => const IndexScreen(),
       routes: const [],
     ),
     GoRoute(

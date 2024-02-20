@@ -12,32 +12,44 @@ class IndexScreen extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () => context.push('/dashboard'),
-            child: Container(
-              child: const Text('/dashboard'),
+            child: const SizedBox(
+              height: 60.0,
+              child: Text('/dashboard'),
             ),
           ),
           GestureDetector(
-            onTap: () => context.push('/dashboard'),
-            child: Container(
-              child: const Text('/dashboard'),
+            onTap: () => context.push('/flight'),
+            child: const SizedBox(
+              height: 60.0,
+              child: Text('/flight'),
             ),
           ),
           GestureDetector(
-            onTap: () => context.push('/dashboard'),
-            child: Container(
-              child: const Text('/dashboard'),
+            onTap: () => context.push('/airport'),
+            child: const SizedBox(
+              height: 60.0,
+              child: Text('/airport'),
             ),
           ),
           GestureDetector(
-            onTap: () => context.push('/dashboard'),
-            child: Container(
-              child: const Text('/dashboard'),
+            onTap: () => context.push('/reservation'),
+            child: const SizedBox(
+              height: 60.0,
+              child: Text('/reservation'),
             ),
           ),
           GestureDetector(
-            onTap: () => context.push('/dashboard'),
-            child: Container(
-              child: const Text('/dashboard'),
+            onTap: () => context.push('/usermanage'),
+            child: const SizedBox(
+              height: 60.0,
+              child: Text('/usermanage'),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => context.push('/payment'),
+            child: const SizedBox(
+              height: 60.0,
+              child: Text('/payment'),
             ),
           ),
         ],
