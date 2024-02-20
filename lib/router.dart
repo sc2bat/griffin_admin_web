@@ -1,4 +1,4 @@
-import 'package:admin_web_app/presentation/home/home_screen.dart';
+import 'package:admin_web_app/ui/home/home_screen.dart';
 import 'package:admin_web_app/presentation/sample/my_home_page.dart';
 import 'package:go_router/go_router.dart';
 
