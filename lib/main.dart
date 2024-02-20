@@ -1,4 +1,4 @@
-import 'package:admin_web_app/presentation/router.dart';
+import 'package:admin_web_app/ui/router.dart';
 import 'package:flutter/material.dart';
 
 void main() {
