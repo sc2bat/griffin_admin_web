@@ -7,4 +7,8 @@ abstract class Env {
   // ADMIN_HOST_URL
   @EnviedField()
   static const String adminHostUrl = _Env.adminHostUrl;
+
+// MOCK_AIRPORT_URL
+  @EnviedField()
+  static const String mockAirportUrl = _Env.mockAirportUrl;
 }
