@@ -1,3 +1,4 @@
+import 'package:admin_web_app/ui/common/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -28,7 +29,7 @@ Widget logoImage(context) {
           color: Colors.black54,
         ),
       ),
-      child: Image.asset('assets/images/common/logo_sample.png'),
+      child: Image.asset(logoSampleImage),
     ),
   );
 }
@@ -38,7 +39,7 @@ List<Widget> menuWidgetList(List<String> menuList, BuildContext context) {
     menuList.length,
     (index) {
       return GestureDetector(
-        onTap: () => context.push('/${menuList[index]}'),
+        onTap: () => context.go('/${menuList[index]}'),
         child: Container(
           constraints: const BoxConstraints(
             minWidth: 160.0,
@@ -60,7 +61,7 @@ List<Widget> menuWidgetList(List<String> menuList, BuildContext context) {
                   Icons.home,
                 ),
               ),
-              Text(menuList[index]),
+              Text(menuList[index].toUpperCase()),
             ],
           ),
         ),
