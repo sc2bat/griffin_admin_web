@@ -1,7 +1,10 @@
+import 'package:admin_web_app/di/di_setup.dart';
 import 'package:admin_web_app/ui/router.dart';
 import 'package:flutter/material.dart';
 
 void main() {
+  diSetup();
+
   runApp(const MyApp());
 }
 
