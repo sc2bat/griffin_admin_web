@@ -1,6 +1,5 @@
-
-import 'package:admin_web_app/ui/airports/airports_screen.dart';
 import 'package:admin_web_app/di/di_setup.dart';
+import 'package:admin_web_app/ui/airports/airports_screen.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
 import 'package:admin_web_app/ui/splash/index_screen.dart';
 import 'package:admin_web_app/ui/user/user_screen.dart';
@@ -9,7 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 final router = GoRouter(
-  initialLocation: '/airports',
+  initialLocation: '/splash',
   routes: [
     GoRoute(
       name: 'splash',

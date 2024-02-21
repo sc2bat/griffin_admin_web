@@ -1,55 +1,43 @@
+import 'package:admin_web_app/ui/common/common.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
-class IndexScreen extends StatelessWidget {
+class IndexScreen extends StatefulWidget {
   const IndexScreen({super.key});
+
+  @override
+  State<IndexScreen> createState() => _IndexScreenState();
+}
+
+class _IndexScreenState extends State<IndexScreen> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Column(
+      appBar: AppBar(
+        title: const Center(
+          child: Text('GRIFFIN ADMIN WEB PAGE'),
+        ),
+      ),
+      body: Row(
         children: [
-          GestureDetector(
-            onTap: () => context.push('/dashboard'),
-            child: const SizedBox(
-              height: 60.0,
-              child: Text('/dashboard'),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: Column(
+              children: [
+                logoImage(context),
+                ...menuWidgetList(menuList, context),
+              ],
             ),
           ),
-          GestureDetector(
-            onTap: () => context.push('/flight'),
-            child: const SizedBox(
-              height: 60.0,
-              child: Text('/flight'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => context.push('/airport'),
-            child: const SizedBox(
-              height: 60.0,
-              child: Text('/airport'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => context.push('/reservation'),
-            child: const SizedBox(
-              height: 60.0,
-              child: Text('/reservation'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => context.push('/usermanage'),
-            child: const SizedBox(
-              height: 60.0,
-              child: Text('/usermanage'),
-            ),
-          ),
-          GestureDetector(
-            onTap: () => context.push('/payment'),
-            child: const SizedBox(
-              height: 60.0,
-              child: Text('/payment'),
+          Expanded(
+            child: Container(
+              child: const Center(
+                child: Text('center'),
+              ),
             ),
           ),
         ],
