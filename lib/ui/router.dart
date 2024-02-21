@@ -1,5 +1,10 @@
+import 'package:admin_web_app/di/di_setup.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
+import 'package:admin_web_app/ui/splash/index_screen.dart';
+import 'package:admin_web_app/ui/user/user_screen.dart';
+import 'package:admin_web_app/ui/user/user_view_model.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 
 final router = GoRouter(
   initialLocation: '/splash',
@@ -7,9 +12,7 @@ final router = GoRouter(
     GoRoute(
       name: 'splash',
       path: '/splash',
-      builder: (_, __) => const MyHomePage(
-        title: 'splash',
-      ),
+      builder: (_, __) => const IndexScreen(),
       routes: const [],
     ),
     GoRoute(
@@ -56,8 +59,9 @@ final router = GoRouter(
     GoRoute(
       name: 'usermanage',
       path: '/usermanage',
-      builder: (_, __) => const MyHomePage(
-        title: 'usermanage',
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<UserViewModel>(),
+        child: const UserScreen(),
       ),
       routes: [
         GoRoute(
