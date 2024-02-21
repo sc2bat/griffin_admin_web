@@ -1,8 +1,9 @@
+import 'package:admin_web_app/ui/airports/airports_screen.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
 import 'package:go_router/go_router.dart';
 
 final router = GoRouter(
-  initialLocation: '/splash',
+  initialLocation: '/airports',
   routes: [
     GoRoute(
       name: 'splash',
@@ -40,8 +41,8 @@ final router = GoRouter(
     GoRoute(
       name: 'airports',
       path: '/airports',
-      builder: (_, __) => const MyHomePage(
-        title: 'airports',
+      builder: (_, __) => const AirportsScreen(
+        // title: 'airports',
       ),
       routes: const [],
     ),
