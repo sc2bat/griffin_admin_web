@@ -7,5 +7,7 @@ void main() {
     String adminHostUrl = Env.adminHostUrl;
 
     logger.info(adminHostUrl);
+
+    logger.info(Env.mockAirportUrl);
   });
 }
