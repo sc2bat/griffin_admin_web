@@ -13,13 +13,28 @@ class _AirportsScreenState extends State<AirportsScreen> {
   bool sort = true;
   int? sortColumnIndex;
   final repository = AirportsRepositoryImpl();
+  final filterController = TextEditingController();
 
   List<AirportsModel> airportsInfo = [];
+  List<AirportsModel> filteredData = [];
+
+  Future<void> showAirportsInfo() async {
+    airportsInfo = await repository.getAirportsList();
+    filteredData = airportsInfo;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    showAirportsInfo();
+
+    super.initState();
+  }
 
   void onSort(int columnIndex, bool ascending) {
     setState(() {
-      this.sortColumnIndex = columnIndex;
-      this.sort = ascending;
+      sortColumnIndex = columnIndex;
+      sort = ascending;
     });
 
     switch (columnIndex) {
@@ -82,16 +97,10 @@ class _AirportsScreenState extends State<AirportsScreen> {
     }
   }
 
-  Future<void> showAirportsInfo() async {
-    airportsInfo = await repository.getAirportsList();
-    setState(() {});
-    print(airportsInfo);
-  }
-
   @override
-  void initState() {
-    showAirportsInfo();
-    super.initState();
+  void dispose() {
+    filterController.dispose();
+    super.dispose();
   }
 
   @override
@@ -103,32 +112,55 @@ class _AirportsScreenState extends State<AirportsScreen> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            Padding(
+              padding: const EdgeInsets.all(32),
+              child: TextField(
+                controller: filterController,
+                decoration: InputDecoration(
+                  hintText: 'airport name',
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  suffixIcon: const Icon(Icons.search),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    airportsInfo = filteredData
+                        .where((element) => element.airportName.contains(value))
+                        .toList();
+                  });
+                },
+              ),
+            ),
             PaginatedDataTable(
               sortColumnIndex: sortColumnIndex,
               sortAscending: sort,
               columns: [
                 DataColumn(
-                  label: Text('airportId'),
+                  label: const Text('airportId'),
                   onSort: onSort,
                 ),
                 DataColumn(
-                  label: Text('airportCode'),
+                  label: const Text('airportCode'),
                   onSort: onSort,
                 ),
                 DataColumn(
-                  label: Text('airportName'),
+                  label: const Text('airportName'),
                   onSort: onSort,
                 ),
                 DataColumn(
-                  label: Text('latitude'),
+                  label: const Text('latitude'),
                   onSort: onSort,
                 ),
                 DataColumn(
-                  label: Text('longitude'),
+                  label: const Text('longitude'),
                   onSort: onSort,
                 ),
                 DataColumn(
-                  label: Text('country'),
+                  label: const Text('country'),
                   onSort: onSort,
                 )
               ],
