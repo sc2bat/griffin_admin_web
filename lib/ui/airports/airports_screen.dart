@@ -11,17 +11,74 @@ class AirportsScreen extends StatefulWidget {
 
 class _AirportsScreenState extends State<AirportsScreen> {
   bool sort = true;
+  int? sortColumnIndex;
   final repository = AirportsRepositoryImpl();
 
   List<AirportsModel> airportsInfo = [];
 
-  onSortColumn(int columnIndex, bool ascending) {
-    if (columnIndex == 0) {
-      if (ascending) {
-        airportsInfo.sort((a, b) => a.airportId.compareTo(b.airportId));
-      } else {
-        airportsInfo.sort((a, b) => b.airportId.compareTo(a.airportId));
-      }
+  void onSort(int columnIndex, bool ascending) {
+    setState(() {
+      this.sortColumnIndex = columnIndex;
+      this.sort = ascending;
+    });
+
+    switch (columnIndex) {
+      case 0:
+        {
+          if (ascending) {
+            airportsInfo.sort((a, b) => a.airportId.compareTo(b.airportId));
+          } else {
+            airportsInfo.sort((a, b) => b.airportId.compareTo(a.airportId));
+          }
+        }
+        break;
+      case 1:
+        {
+          if (ascending) {
+            airportsInfo.sort((a, b) => a.airportCode.compareTo(b.airportCode));
+          } else {
+            airportsInfo.sort((a, b) => b.airportCode.compareTo(a.airportCode));
+          }
+        }
+        break;
+      case 2:
+        {
+          if (ascending) {
+            airportsInfo.sort((a, b) => a.airportName.compareTo(b.airportName));
+          } else {
+            airportsInfo.sort((a, b) => b.airportName.compareTo(a.airportName));
+          }
+        }
+        break;
+      case 3:
+        {
+          if (ascending) {
+            airportsInfo.sort((a, b) => a.latitude.compareTo(b.latitude));
+          } else {
+            airportsInfo.sort((a, b) => b.latitude.compareTo(a.latitude));
+          }
+        }
+        break;
+      case 4:
+        {
+          if (ascending) {
+            airportsInfo.sort((a, b) => a.longitude.compareTo(b.longitude));
+          } else {
+            airportsInfo.sort((a, b) => b.longitude.compareTo(a.longitude));
+          }
+        }
+        break;
+      case 5:
+        {
+          if (ascending) {
+            airportsInfo.sort((a, b) => a.country.compareTo(b.country));
+          } else {
+            airportsInfo.sort((a, b) => b.country.compareTo(a.country));
+          }
+        }
+        break;
+      default:
+        break;
     }
   }
 
@@ -47,33 +104,32 @@ class _AirportsScreenState extends State<AirportsScreen> {
         child: Column(
           children: [
             PaginatedDataTable(
-              sortColumnIndex: 0,
+              sortColumnIndex: sortColumnIndex,
               sortAscending: sort,
               columns: [
                 DataColumn(
                   label: Text('airportId'),
-                  onSort: (columnIndex, ascending) {
-                    setState(() {
-                      sort = !sort;
-                    });
-                    onSortColumn(columnIndex, ascending);
-                  },
+                  onSort: onSort,
                 ),
                 DataColumn(
                   label: Text('airportCode'),
+                  onSort: onSort,
                 ),
                 DataColumn(
                   label: Text('airportName'),
-
+                  onSort: onSort,
                 ),
                 DataColumn(
                   label: Text('latitude'),
+                  onSort: onSort,
                 ),
                 DataColumn(
                   label: Text('longitude'),
+                  onSort: onSort,
                 ),
                 DataColumn(
                   label: Text('country'),
+                  onSort: onSort,
                 )
               ],
               source: AirportsDataSource(airportsInfo),
