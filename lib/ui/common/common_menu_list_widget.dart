@@ -5,12 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class CommonMenuListWidget extends StatelessWidget {
+  final BuildContext context;
   const CommonMenuListWidget({
     super.key,
+    required this.context,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(_) {
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -86,7 +88,7 @@ List<Widget> menuWidgetList(
     menuList.length,
     (index) {
       return GestureDetector(
-        onTap: () => context.go('/${menuList[index]}'),
+        onTap: () => context.go('/${menuList[index]['name']}'),
         child: Container(
           constraints: BoxConstraints(
             minWidth: width > 500 ? 160.0 : 40,

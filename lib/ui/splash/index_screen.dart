@@ -24,9 +24,9 @@ class _IndexScreenState extends State<IndexScreen> {
       ),
       body: Row(
         children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.0),
-            child: CommonMenuListWidget(),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+            child: CommonMenuListWidget(context: context),
           ),
           Expanded(
             child: Container(

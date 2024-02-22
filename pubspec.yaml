@@ -44,6 +44,7 @@ dependencies:
   envied: ^0.5.3
   provider: ^6.1.1
   get_it: ^7.6.7
+  fl_chart: ^0.66.2
 
 dev_dependencies:
   flutter_test:
