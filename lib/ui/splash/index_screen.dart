@@ -1,4 +1,4 @@
-import 'package:admin_web_app/ui/common/common.dart';
+import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:flutter/material.dart';
 
 class IndexScreen extends StatefulWidget {
@@ -24,14 +24,9 @@ class _IndexScreenState extends State<IndexScreen> {
       ),
       body: Row(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              children: [
-                logoImage(context),
-                ...menuWidgetList(menuList, context),
-              ],
-            ),
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.0),
+            child: CommonMenuListWidget(),
           ),
           Expanded(
             child: Container(

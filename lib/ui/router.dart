@@ -19,9 +19,7 @@ final router = GoRouter(
     GoRoute(
       name: 'dashboard',
       path: '/dashboard',
-      builder: (_, __) => const MyHomePage(
-        title: 'dashboard',
-      ),
+      builder: (_, __) => const IndexScreen(),
       routes: const [],
     ),
     GoRoute(
