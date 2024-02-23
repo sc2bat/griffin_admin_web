@@ -1,5 +1,6 @@
 import 'package:admin_web_app/di/di_setup.dart';
 import 'package:admin_web_app/ui/airports/airports_screen.dart';
+import 'package:admin_web_app/ui/airports/airports_view_model.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
 import 'package:admin_web_app/ui/splash/index_screen.dart';
 import 'package:admin_web_app/ui/user/user_screen.dart';
@@ -42,7 +43,12 @@ final router = GoRouter(
     GoRoute(
       name: 'airports',
       path: '/airports',
-      builder: (_, __) => const AirportsScreen(),
+      builder: (_, __) {
+        return ChangeNotifierProvider(
+          create: (_) => AirportsViewModel(),
+          child: const AirportsScreen(),
+        );
+      },
       routes: const [],
     ),
     GoRoute(

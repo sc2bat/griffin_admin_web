@@ -10,9 +10,12 @@ part 'airports_state.g.dart';
 @freezed
 class AirportsState with _$AirportsState {
   const factory AirportsState({
-    @Default(false) bool isLoading,
-    @Default([]) List<AirportsModel> airportsList,
+    @Default(true) bool sort,
+    int? sortColumnIndex,
+    @Default([]) List<AirportsModel> airportsInfo,
+    @Default([]) List<AirportsModel> filteredData,
   }) = _AirportsState;
 
-  factory AirportsState.fromJson(Map<String, Object?> json) => _$AirportsStateFromJson(json);
+  factory AirportsState.fromJson(Map<String, Object?> json) =>
+      _$AirportsStateFromJson(json);
 }
