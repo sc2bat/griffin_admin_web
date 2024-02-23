@@ -1,3 +1,4 @@
+import 'package:admin_web_app/ui/common/constants.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
@@ -79,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           SideMenu(
             controller: sideMenu,
-            title: Image.asset('assets/images/common/logo_sample.png'),
+            title: Image.asset(logoSampleImage),
             footer: const Text('demo'),
             onDisplayModeChanged: (mode) {
               logger.info(mode);

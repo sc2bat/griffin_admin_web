@@ -9,7 +9,7 @@ class AirportsScreen extends StatefulWidget {
   State<AirportsScreen> createState() => _AirportsScreenState();
 }
 
-class _AirportsScreenState extends State<AirportsScreen> {
+class _AirportsScreenState extends State<AirportsScreen> 
   bool sort = true;
   int? sortColumnIndex;
   final repository = AirportsRepositoryImpl();
@@ -27,7 +27,6 @@ class _AirportsScreenState extends State<AirportsScreen> {
   @override
   void initState() {
     showAirportsInfo();
-
     super.initState();
   }
 
