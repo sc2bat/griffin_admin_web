@@ -1,5 +1,7 @@
 import 'package:admin_web_app/di/di_setup.dart';
 import 'package:admin_web_app/ui/airports/airports_screen.dart';
+import 'package:admin_web_app/ui/book/book_screen.dart';
+import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
 import 'package:admin_web_app/ui/splash/index_screen.dart';
 import 'package:admin_web_app/ui/user/user_screen.dart';
@@ -46,12 +48,22 @@ final router = GoRouter(
       routes: const [],
     ),
     GoRoute(
-      name: 'reservation',
-      path: '/reservation',
-      builder: (_, __) => const MyHomePage(
-        title: 'reservation',
+      name: 'book',
+      path: '/book',
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<BookViewModel>(),
+        child: const BookScreen(),
       ),
-      routes: const [],
+      routes: [
+        GoRoute(
+          name: 'book_detail',
+          path: 'detail',
+          builder: (_, __) => const MyHomePage(
+            title: 'book_detail',
+          ),
+          routes: const [],
+        ),
+      ],
     ),
     GoRoute(
       name: 'usermanage',
