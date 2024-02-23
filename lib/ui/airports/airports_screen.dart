@@ -33,7 +33,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
   @override
   Widget build(BuildContext context) {
     final viewModel = context.watch<AirportsViewModel>();
-    // final state = viewModel.state;
+    final state = viewModel.state;
     return Scaffold(
       appBar: AppBar(
         title: const Text('airports'),
@@ -66,8 +66,8 @@ class _AirportsScreenState extends State<AirportsScreen> {
                     ),
                   ),
                   PaginatedDataTable(
-                    sortColumnIndex: viewModel.sortColumnIndex,
-                    sortAscending: viewModel.sort,
+                    sortColumnIndex: state.sortColumnIndex,
+                    sortAscending: state.sort,
                     columns: [
                       DataColumn(
                         label: const Text('airportId'),

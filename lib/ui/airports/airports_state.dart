@@ -12,7 +12,6 @@ class AirportsState with _$AirportsState {
   const factory AirportsState({
     @Default(true) bool sort,
     int? sortColumnIndex,
-    @Default([]) List<AirportsModel> airportsInfo,
     @Default([]) List<AirportsModel> filteredData,
   }) = _AirportsState;
 

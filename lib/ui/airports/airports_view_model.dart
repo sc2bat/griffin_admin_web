@@ -1,31 +1,33 @@
 import 'package:admin_web_app/data/model/airports_model.dart';
 import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
+import 'package:admin_web_app/ui/airports/airports_state.dart';
 import 'package:flutter/cupertino.dart';
 
 class AirportsViewModel extends ChangeNotifier {
-  bool sort = true;
-  int? sortColumnIndex;
+  AirportsState _state = const AirportsState();
+
+  AirportsState get state => _state;
+
   List<AirportsModel> airportsInfo = [];
-  List<AirportsModel> filteredData = [];
 
   final repository = AirportsRepositoryImpl();
 
+  Future<void> showAirportsInfo() async {
+    airportsInfo = await repository.getAirportsList();
+    _state = state.copyWith(filteredData: airportsInfo);
+    notifyListeners();
+  }
+
   void onChanged(value) {
-    airportsInfo = filteredData
+    airportsInfo = state.filteredData
         .where((element) => element.airportName.contains(value))
         .toList();
     notifyListeners();
   }
 
-  Future<void> showAirportsInfo() async {
-    airportsInfo = await repository.getAirportsList();
-    filteredData = airportsInfo;
-    notifyListeners();
-  }
-
   void onSort(int columnIndex, bool ascending) {
-    sortColumnIndex = columnIndex;
-    sort = ascending;
+    _state = state.copyWith(sortColumnIndex: columnIndex);
+    _state = state.copyWith(sort: ascending);
     notifyListeners();
 
     switch (columnIndex) {
