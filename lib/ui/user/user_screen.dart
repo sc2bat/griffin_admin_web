@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../common/common_menu_list_widget.dart';
-
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
 
@@ -81,7 +80,6 @@ class _UserScreenState extends State<UserScreen> {
       ),
     );
   }
-
   @override
   Widget build(BuildContext context) {
     final UserViewModel userViewModel = context.watch();
