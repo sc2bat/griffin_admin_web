@@ -47,7 +47,7 @@ final List<Map<String, dynamic>> menuList = [
   },
   {
     'menuid': '5',
-    'name': 'usermanage',
+    'name': 'user',
     'icon': const Icon(Icons.supervised_user_circle),
   },
   {

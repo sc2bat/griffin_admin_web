@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../common/common_menu_list_widget.dart';
+
 class UserScreen extends StatefulWidget {
   const UserScreen({super.key});
 
@@ -40,6 +41,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+  // 차트 하단
   Widget bottomTitles(double value, TitleMeta meta) {
     const style = TextStyle(fontSize: 10);
     String text;
@@ -65,6 +67,7 @@ class _UserScreenState extends State<UserScreen> {
     );
   }
 
+  // 차트 좌단
   Widget leftTitles(double value, TitleMeta meta) {
     if (value == meta.max) {
       return Container();
@@ -80,11 +83,13 @@ class _UserScreenState extends State<UserScreen> {
       ),
     );
   }
+
   @override
   Widget build(BuildContext context) {
     final UserViewModel userViewModel = context.watch();
     final UserState userState = userViewModel.state;
 
+    // 유저 목 데이터
     List<UserModel> dumpUserList = List.generate(
       60,
       (index) => UserModel(
@@ -95,6 +100,7 @@ class _UserScreenState extends State<UserScreen> {
       ),
     );
 
+    // 차트 목 데이터
     List<Map<String, dynamic>> userCountByDate = [
       {
         'date': '20240212',
@@ -135,7 +141,7 @@ class _UserScreenState extends State<UserScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('GRIFFIN ADMIN WEB PAGE'),
+          child: Text('USER MANAGE PAGE'),
         ),
       ),
       body: Container(
