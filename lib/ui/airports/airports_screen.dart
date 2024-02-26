@@ -2,7 +2,7 @@ import 'package:admin_web_app/ui/airports/airports_view_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../data/model/airports_model.dart';
+import '../../data/model/airports/airports_model.dart';
 
 class AirportsScreen extends StatefulWidget {
   const AirportsScreen({super.key});

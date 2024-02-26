@@ -15,4 +15,7 @@ abstract class Env {
   // MOCK_BOOK_URL
   @EnviedField()
   static const String mockBookUrl = _Env.mockBookUrl;
+
+  @EnviedField()
+  static const String mockFlightsUrl = _Env.mockFlightsUrl;
 }

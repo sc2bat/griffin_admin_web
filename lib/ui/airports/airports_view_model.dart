@@ -1,4 +1,4 @@
-import 'package:admin_web_app/data/model/airports_model.dart';
+import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
 import 'package:admin_web_app/ui/airports/airports_state.dart';
 import 'package:flutter/cupertino.dart';

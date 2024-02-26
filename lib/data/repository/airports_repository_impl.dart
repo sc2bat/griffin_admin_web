@@ -1,10 +1,10 @@
 import 'dart:convert';
-
-import 'package:admin_web_app/data/model/airports_model.dart';
+import 'package:admin_web_app/data/data_source/http.dart';
+import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/domain/repository/airports_repository.dart';
 import 'package:admin_web_app/env/env.dart';
 
-import '../data_source/http.dart';
+
 
 class AirportsRepositoryImpl implements AirportsRepository {
   @override
