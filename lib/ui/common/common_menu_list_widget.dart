@@ -42,12 +42,12 @@ final List<Map<String, dynamic>> menuList = [
   },
   {
     'menuid': '4',
-    'name': 'reservation',
+    'name': 'book',
     'icon': const Icon(Icons.airplane_ticket_rounded),
   },
   {
     'menuid': '5',
-    'name': 'usermanage',
+    'name': 'user',
     'icon': const Icon(Icons.supervised_user_circle),
   },
   {

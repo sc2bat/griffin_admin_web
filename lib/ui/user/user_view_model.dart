@@ -8,7 +8,6 @@ class UserViewModel extends ChangeNotifier {
   UserViewModel({
     required UserRepository userRepository,
   }) : _userRepository = userRepository;
-  // final _userRepository = UserRepositoryImpl();
 
   UserState _state = UserState();
 
