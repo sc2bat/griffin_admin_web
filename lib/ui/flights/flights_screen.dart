@@ -13,10 +13,53 @@ class FlightsScreen extends StatefulWidget {
 class _FlightsScreenState extends State<FlightsScreen> {
   List<FlightsModel> flightsInfo = [];
   final repository = FlightsRepositoryImpl();
+  bool sort = true;
+  int? sortColumnIndex;
 
   Future<void> showFlightsInfo() async {
     flightsInfo = await repository.getFlightsList();
     setState(() {});
+  }
+
+  void onSort(int columnIndex, bool ascending) {
+    setState(() {
+      sortColumnIndex = columnIndex;
+      sort = ascending;
+    });
+
+    switch (columnIndex) {
+      case 2:
+        {
+          if (ascending) {
+            flightsInfo.sort((a, b) => a.flightDate.compareTo(b.flightDate));
+          } else {
+            flightsInfo.sort((a, b) => b.flightDate.compareTo(a.flightDate));
+          }
+        }
+        break;
+      case 3:
+        {
+          if (ascending) {
+            flightsInfo
+                .sort((a, b) => a.departureTime.compareTo(b.departureTime));
+          } else {
+            flightsInfo
+                .sort((a, b) => b.departureTime.compareTo(a.departureTime));
+          }
+        }
+        break;
+      case 4:
+        {
+          if (ascending) {
+            flightsInfo.sort((a, b) => a.arrivalTime.compareTo(b.arrivalTime));
+          } else {
+            flightsInfo.sort((a, b) => b.arrivalTime.compareTo(a.arrivalTime));
+          }
+        }
+        break;
+      default:
+        break;
+    }
   }
 
   @override
@@ -41,27 +84,119 @@ class _FlightsScreenState extends State<FlightsScreen> {
                 child: SingleChildScrollView(
               child: Column(
                 children: [
+                  Row(
+                    children: [
+                      const Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Text('비행일 : '),
+                                  Expanded(
+                                      child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide()),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide()),
+                                        hintText: 'yyyymmdd',
+                                      ),
+                                    ),
+                                  )),
+                                  Text('출발지 : '),
+                                  Expanded(
+                                      child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide()),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide()),
+                                          hintText: 'ICN'),
+                                    ),
+                                  )),
+                                  Text('도착지 : '),
+                                  Expanded(
+                                      child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide()),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide()),
+                                          hintText: 'ICN'),
+                                    ),
+                                  )),
+                                  // ElevatedButton(onPressed: () {}, child: Text('확인'))
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text('출발시간 : '),
+                                  Expanded(
+                                      child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide()),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide()),
+                                          hintText: '1240'),
+                                    ),
+                                  )),
+                                  Text('도착시간 : '),
+                                  Expanded(
+                                      child: Padding(
+                                    padding: EdgeInsets.all(8.0),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                          focusedBorder: OutlineInputBorder(
+                                              borderSide: BorderSide()),
+                                          enabledBorder: OutlineInputBorder(
+                                              borderSide: BorderSide()),
+                                          hintText: '1240'),
+                                    ),
+                                  )),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: ElevatedButton(
+                            onPressed: () {}, child: const Text('확인')),
+                      )
+                    ],
+                  ),
                   PaginatedDataTable(
-                    columns: const [
-                      DataColumn(
+                    sortColumnIndex: sortColumnIndex,
+                    sortAscending: sort,
+                    columns: [
+                      const DataColumn(
                         label: Text('Flight Id'),
                       ),
-                      DataColumn(
+                      const DataColumn(
                         label: Text('Airplane Id'),
                       ),
                       DataColumn(
-                        label: Text('Flight Date'),
-                      ),
+                          label: const Text('Flight Date'), onSort: onSort),
                       DataColumn(
-                        label: Text('Departure Time'),
-                      ),
+                          label: const Text('Departure Time'), onSort: onSort),
                       DataColumn(
-                        label: Text('Arrival Time'),
-                      ),
-                      DataColumn(
+                          label: const Text('Arrival Time'), onSort: onSort),
+                      const DataColumn(
                         label: Text('Departure Name'),
                       ),
-                      DataColumn(
+                      const DataColumn(
                         label: Text('Arrival Name'),
                       ),
                     ],
