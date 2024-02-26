@@ -1,7 +1,6 @@
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
 import 'package:admin_web_app/data/repository/flights_repository_impl.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
-import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:flutter/material.dart';
 
 class FlightsScreen extends StatefulWidget {
@@ -23,7 +22,6 @@ class _FlightsScreenState extends State<FlightsScreen> {
   @override
   void initState() {
     showFlightsInfo();
-    logger.info(flightsInfo);
     super.initState();
   }
 
@@ -88,27 +86,16 @@ class FlightsDataTableSource extends DataTableSource {
   DataRow? getRow(int index) {
     final flight = flightsInfo[index];
     return DataRow(cells: [
-      DataCell(
-        Text(flight.flightId.toString()),
-      ),
-      DataCell(
-        Text(flight.airplaneId.toString()),
-      ),
-      DataCell(
-        Text(flight.flightDate),
-      ),
-      DataCell(
-        Text(flight.departureTime),
-      ),
-      DataCell(
-        Text(flight.arrivalTime),
-      ),
-      DataCell(
-        Text(flight.departureName),
-      ),
-      DataCell(
-        Text(flight.arrivalName),
-      ),
+      DataCell(Text(flight.flightId.toString())),
+      DataCell(Text(flight.airplaneId.toString())),
+      DataCell(Text(
+          '${flight.flightDate.substring(0, 4)}.${flight.flightDate.substring(4, 6)}.${flight.flightDate.substring(6)}')),
+      DataCell(Text(
+          '${flight.departureTime.substring(0, 2)}:${flight.departureTime.substring(2)}')),
+      DataCell(Text(
+          '${flight.arrivalTime.substring(0, 2)}:${flight.arrivalTime.substring(2)}')),
+      DataCell(Text(flight.departureName)),
+      DataCell(Text(flight.arrivalName)),
     ]);
   }
 

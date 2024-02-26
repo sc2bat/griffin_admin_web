@@ -81,13 +81,11 @@ class _AirportsScreenState extends State<AirportsScreen> {
                         label: const Text('airportName'),
                         onSort: viewModel.onSort,
                       ),
-                      DataColumn(
-                        label: const Text('latitude'),
-                        onSort: viewModel.onSort,
+                      const DataColumn(
+                        label: Text('latitude'),
                       ),
-                      DataColumn(
-                        label: const Text('longitude'),
-                        onSort: viewModel.onSort,
+                      const DataColumn(
+                        label: Text('longitude'),
                       ),
                       DataColumn(
                         label: const Text('country'),

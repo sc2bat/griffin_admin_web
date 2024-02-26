@@ -58,24 +58,6 @@ class AirportsViewModel extends ChangeNotifier {
           }
         }
         break;
-      case 3:
-        {
-          if (ascending) {
-            airportsInfo.sort((a, b) => a.latitude.compareTo(b.latitude));
-          } else {
-            airportsInfo.sort((a, b) => b.latitude.compareTo(a.latitude));
-          }
-        }
-        break;
-      case 4:
-        {
-          if (ascending) {
-            airportsInfo.sort((a, b) => a.longitude.compareTo(b.longitude));
-          } else {
-            airportsInfo.sort((a, b) => b.longitude.compareTo(a.longitude));
-          }
-        }
-        break;
       case 5:
         {
           if (ascending) {
