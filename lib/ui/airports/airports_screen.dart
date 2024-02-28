@@ -115,11 +115,11 @@ class AirportsDataTableSource extends DataTableSource {
   DataRow? getRow(int index) {
     final airport = airportsInfo[index];
     return DataRow(cells: [
-      DataCell(Text(airport.airportId)),
+      DataCell(Text('${airport.airportId}')),
       DataCell(Text(airport.airportCode)),
       DataCell(Text(airport.airportName)),
-      DataCell(Text(airport.latitude)),
-      DataCell(Text(airport.longitude)),
+      DataCell(Text('${airport.latitude}')),
+      DataCell(Text('${airport.longitude}')),
       DataCell(Text(airport.country)),
     ]);
   }

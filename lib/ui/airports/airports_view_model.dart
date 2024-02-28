@@ -18,9 +18,9 @@ class AirportsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onChanged(value) {
+  void onChanged(String value) {
     airportsInfo = state.filteredData
-        .where((element) => element.airportName.contains(value))
+        .where((element) => element.airportName.toLowerCase().contains(value.toLowerCase()))
         .toList();
     notifyListeners();
   }
