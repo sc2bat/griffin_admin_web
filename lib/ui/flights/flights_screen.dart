@@ -1,6 +1,9 @@
+import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
+import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
 import 'package:admin_web_app/data/repository/flights_repository_impl.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
+import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:flutter/material.dart';
 
 class FlightsScreen extends StatefulWidget {
@@ -12,14 +15,43 @@ class FlightsScreen extends StatefulWidget {
 
 class _FlightsScreenState extends State<FlightsScreen> {
   List<FlightsModel> flightsInfo = [];
-  final repository = FlightsRepositoryImpl();
+  List<AirportsModel> airportsInfo = [];
+  final flightRepository = FlightsRepositoryImpl();
+  final airportsRepository = AirportsRepositoryImpl();
+  final departureLocFilter = TextEditingController();
   bool sort = true;
   int? sortColumnIndex;
 
-  Future<void> showFlightsInfo() async {
-    flightsInfo = await repository.getFlightsList();
+  Future<void> showFlightsInfo(
+      {String? date,
+      String? departureTime,
+      String? arrivalTime,
+      int? departureLoc,
+      int? arrivalLoc}) async {
+    flightsInfo = await flightRepository.getFlightsList(
+        date: date,
+        departureTime: departureTime,
+        arrivalTime: arrivalTime,
+        departureLoc: departureLoc,
+        arrivalLoc: arrivalLoc);
     setState(() {});
   }
+
+  Future<void> showAirportsInfo() async {
+    airportsInfo = await airportsRepository.getAirportsList();
+    setState(() {});
+  }
+
+  // Map<String,dynamic>saveToMap ([String? date,String? departureTime, String? arrivalTime, int? departureLoc, int? arrivalLoc]){
+  //   Map<String, dynamic> result = {
+  //       'departure_date' : date,
+  //       'departure_time' : departureTime,
+  //       'arrival_time': arrivalTime,
+  //       'departure_loc' : departureLoc,
+  //       'arrival_loc': arrivalLoc
+  //   };
+  //       return result;
+  // }
 
   void onSort(int columnIndex, bool ascending) {
     setState(() {
@@ -28,15 +60,15 @@ class _FlightsScreenState extends State<FlightsScreen> {
     });
 
     switch (columnIndex) {
-      case 2:
-        {
-          if (ascending) {
-            flightsInfo.sort((a, b) => a.flightDate.compareTo(b.flightDate));
-          } else {
-            flightsInfo.sort((a, b) => b.flightDate.compareTo(a.flightDate));
-          }
-        }
-        break;
+      // case 2:
+      //   {
+      //     if (ascending) {
+      //       flightsInfo.sort((a, b) => a.flightDate.compareTo(b.flightDate));
+      //     } else {
+      //       flightsInfo.sort((a, b) => b.flightDate.compareTo(a.flightDate));
+      //     }
+      //   }
+      //   break;
       case 3:
         {
           if (ascending) {
@@ -65,6 +97,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
   @override
   void initState() {
     showFlightsInfo();
+    // showAirportsInfo();
     super.initState();
   }
 
@@ -86,15 +119,15 @@ class _FlightsScreenState extends State<FlightsScreen> {
                 children: [
                   Row(
                     children: [
-                      const Expanded(
+                      Expanded(
                         child: Padding(
-                          padding: EdgeInsets.all(16.0),
+                          padding: const EdgeInsets.all(16.0),
                           child: Column(
                             children: [
                               Row(
                                 children: [
-                                  Text('비행일 : '),
-                                  Expanded(
+                                  const Text('비행일 : '),
+                                  const Expanded(
                                       child: Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: TextField(
@@ -107,12 +140,13 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                       ),
                                     ),
                                   )),
-                                  Text('출발지 : '),
+                                  const Text('출발지 : '),
                                   Expanded(
                                       child: Padding(
-                                    padding: EdgeInsets.all(8.0),
+                                    padding: const EdgeInsets.all(8.0),
                                     child: TextField(
-                                      decoration: InputDecoration(
+                                      controller: departureLocFilter,
+                                      decoration: const InputDecoration(
                                           focusedBorder: OutlineInputBorder(
                                               borderSide: BorderSide()),
                                           enabledBorder: OutlineInputBorder(
@@ -120,8 +154,8 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                           hintText: 'ICN'),
                                     ),
                                   )),
-                                  Text('도착지 : '),
-                                  Expanded(
+                                  const Text('도착지 : '),
+                                  const Expanded(
                                       child: Padding(
                                     padding: EdgeInsets.all(8.0),
                                     child: TextField(
@@ -136,7 +170,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                   // ElevatedButton(onPressed: () {}, child: Text('확인'))
                                 ],
                               ),
-                              Row(
+                              const Row(
                                 children: [
                                   Text('출발시간 : '),
                                   Expanded(
@@ -173,7 +207,14 @@ class _FlightsScreenState extends State<FlightsScreen> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: ElevatedButton(
-                            onPressed: () {}, child: const Text('확인')),
+                          // onPressed: () {
+                          //   showFlightsInfo(
+                          //       departureLoc:
+                          //           int.parse(departureLocFilter.text));
+                          // },
+                          onPressed: (){},
+                          child: const Text('확인'),
+                        ),
                       )
                     ],
                   ),
@@ -200,7 +241,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
                         label: Text('Arrival Name'),
                       ),
                     ],
-                    source: FlightsDataTableSource(flightsInfo),
+                    source: FlightsDataTableSource(flightsInfo, airportsInfo),
                     rowsPerPage: 10,
                     horizontalMargin: 60,
                   ),
@@ -213,24 +254,32 @@ class _FlightsScreenState extends State<FlightsScreen> {
 }
 
 class FlightsDataTableSource extends DataTableSource {
-  List<FlightsModel> flightsInfo = [];
+  List<FlightsModel> flightsInfo;
+  List<AirportsModel> airportsInfo;
 
-  FlightsDataTableSource(this.flightsInfo);
+  FlightsDataTableSource(this.flightsInfo, this.airportsInfo);
 
   @override
   DataRow? getRow(int index) {
     final flight = flightsInfo[index];
+    final departureName = airportsInfo
+        .firstWhere((airport) => airport.airportId == flight.departureLoc);
+    final arrivalName = airportsInfo
+        .firstWhere((airport) => airport.airportId == flight.arrivalLoc);
     return DataRow(cells: [
-      DataCell(Text(flight.flightId.toString())),
-      DataCell(Text(flight.airplaneId.toString())),
-      DataCell(Text(
-          '${flight.flightDate.substring(0, 4)}.${flight.flightDate.substring(4, 6)}.${flight.flightDate.substring(6)}')),
+      DataCell(Text('${flight.flightId}')),
+      DataCell(Text('${flight.airplaneId}')),
+      // DataCell(Text(
+      //     '${flight.flightDate.substring(0, 4)}.${flight.flightDate.substring(4, 6)}.${flight.flightDate.substring(6)}')),
+      const DataCell(Text('0000')),
       DataCell(Text(
           '${flight.departureTime.substring(0, 2)}:${flight.departureTime.substring(2)}')),
       DataCell(Text(
           '${flight.arrivalTime.substring(0, 2)}:${flight.arrivalTime.substring(2)}')),
-      DataCell(Text(flight.departureName)),
-      DataCell(Text(flight.arrivalName)),
+      DataCell(Text(departureName.airportName)),
+      DataCell(Text(arrivalName.airportName)),
+      DataCell(Text('${flight.departureLoc}')),
+      DataCell(Text('${flight.arrivalLoc}')),
     ]);
   }
 

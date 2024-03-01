@@ -107,7 +107,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
 }
 
 class AirportsDataTableSource extends DataTableSource {
-  List<AirportsModel> airportsInfo = [];
+  List<AirportsModel> airportsInfo;
 
   AirportsDataTableSource(this.airportsInfo);
 
