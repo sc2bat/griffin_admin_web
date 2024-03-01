@@ -3,7 +3,6 @@ import 'package:admin_web_app/data/model/flights/flights_model.dart';
 import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
 import 'package:admin_web_app/data/repository/flights_repository_impl.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
-import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:flutter/material.dart';
 
 class FlightsScreen extends StatefulWidget {
@@ -41,17 +40,6 @@ class _FlightsScreenState extends State<FlightsScreen> {
     airportsInfo = await airportsRepository.getAirportsList();
     setState(() {});
   }
-
-  // Map<String,dynamic>saveToMap ([String? date,String? departureTime, String? arrivalTime, int? departureLoc, int? arrivalLoc]){
-  //   Map<String, dynamic> result = {
-  //       'departure_date' : date,
-  //       'departure_time' : departureTime,
-  //       'arrival_time': arrivalTime,
-  //       'departure_loc' : departureLoc,
-  //       'arrival_loc': arrivalLoc
-  //   };
-  //       return result;
-  // }
 
   void onSort(int columnIndex, bool ascending) {
     setState(() {
@@ -97,7 +85,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
   @override
   void initState() {
     showFlightsInfo();
-    // showAirportsInfo();
+    showAirportsInfo();
     super.initState();
   }
 
@@ -212,7 +200,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
                           //       departureLoc:
                           //           int.parse(departureLocFilter.text));
                           // },
-                          onPressed: (){},
+                          onPressed: () {},
                           child: const Text('확인'),
                         ),
                       )
@@ -278,8 +266,8 @@ class FlightsDataTableSource extends DataTableSource {
           '${flight.arrivalTime.substring(0, 2)}:${flight.arrivalTime.substring(2)}')),
       DataCell(Text(departureName.airportName)),
       DataCell(Text(arrivalName.airportName)),
-      DataCell(Text('${flight.departureLoc}')),
-      DataCell(Text('${flight.arrivalLoc}')),
+      // DataCell(Text('${flight.departureLoc}')),
+      // DataCell(Text('${flight.arrivalLoc}')),
     ]);
   }
 
