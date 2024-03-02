@@ -8,6 +8,10 @@ abstract class Env {
   @EnviedField()
   static const String adminHostUrl = _Env.adminHostUrl;
 
+  // GRIFFIN_FLIGHT_URL
+  @EnviedField()
+  static const String griffinFlightUrl = _Env.griffinFlightUrl;
+
 // MOCK_AIRPORT_URL
   @EnviedField()
   static const String mockAirportUrl = _Env.mockAirportUrl;
@@ -15,4 +19,9 @@ abstract class Env {
   // MOCK_BOOK_URL
   @EnviedField()
   static const String mockBookUrl = _Env.mockBookUrl;
+
+  @EnviedField()
+  static const String mockFlightsUrl = _Env.mockFlightsUrl;
 }
+
+

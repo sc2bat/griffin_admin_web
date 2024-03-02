@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
-import '../../data/model/airports_model.dart';
+import '../../data/model/airports/airports_model.dart';
 
 part 'airports_state.freezed.dart';
 

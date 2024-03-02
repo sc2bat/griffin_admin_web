@@ -1,4 +1,4 @@
-import 'package:admin_web_app/data/model/airports_model.dart';
+import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
 import 'package:admin_web_app/ui/airports/airports_state.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,9 +18,9 @@ class AirportsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void onChanged(value) {
+  void onChanged(String value) {
     airportsInfo = state.filteredData
-        .where((element) => element.airportName.contains(value))
+        .where((element) => element.airportName.toLowerCase().contains(value.toLowerCase()))
         .toList();
     notifyListeners();
   }
@@ -55,24 +55,6 @@ class AirportsViewModel extends ChangeNotifier {
             airportsInfo.sort((a, b) => a.airportName.compareTo(b.airportName));
           } else {
             airportsInfo.sort((a, b) => b.airportName.compareTo(a.airportName));
-          }
-        }
-        break;
-      case 3:
-        {
-          if (ascending) {
-            airportsInfo.sort((a, b) => a.latitude.compareTo(b.latitude));
-          } else {
-            airportsInfo.sort((a, b) => b.latitude.compareTo(a.latitude));
-          }
-        }
-        break;
-      case 4:
-        {
-          if (ascending) {
-            airportsInfo.sort((a, b) => a.longitude.compareTo(b.longitude));
-          } else {
-            airportsInfo.sort((a, b) => b.longitude.compareTo(a.longitude));
           }
         }
         break;

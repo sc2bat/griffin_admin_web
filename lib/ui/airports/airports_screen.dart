@@ -2,7 +2,7 @@ import 'package:admin_web_app/ui/airports/airports_view_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../../data/model/airports_model.dart';
+import '../../data/model/airports/airports_model.dart';
 
 class AirportsScreen extends StatefulWidget {
   const AirportsScreen({super.key});
@@ -81,13 +81,11 @@ class _AirportsScreenState extends State<AirportsScreen> {
                         label: const Text('airportName'),
                         onSort: viewModel.onSort,
                       ),
-                      DataColumn(
-                        label: const Text('latitude'),
-                        onSort: viewModel.onSort,
+                      const DataColumn(
+                        label: Text('latitude'),
                       ),
-                      DataColumn(
-                        label: const Text('longitude'),
-                        onSort: viewModel.onSort,
+                      const DataColumn(
+                        label: Text('longitude'),
                       ),
                       DataColumn(
                         label: const Text('country'),
@@ -109,7 +107,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
 }
 
 class AirportsDataTableSource extends DataTableSource {
-  List<AirportsModel> airportsInfo = [];
+  List<AirportsModel> airportsInfo;
 
   AirportsDataTableSource(this.airportsInfo);
 
@@ -117,11 +115,11 @@ class AirportsDataTableSource extends DataTableSource {
   DataRow? getRow(int index) {
     final airport = airportsInfo[index];
     return DataRow(cells: [
-      DataCell(Text(airport.airportId)),
+      DataCell(Text('${airport.airportId}')),
       DataCell(Text(airport.airportCode)),
       DataCell(Text(airport.airportName)),
-      DataCell(Text(airport.latitude)),
-      DataCell(Text(airport.longitude)),
+      DataCell(Text('${airport.latitude}')),
+      DataCell(Text('${airport.longitude}')),
       DataCell(Text(airport.country)),
     ]);
   }
