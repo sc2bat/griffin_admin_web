@@ -1,7 +1,6 @@
 import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
 import 'package:admin_web_app/ui/airports/airports_state.dart';
-import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:flutter/cupertino.dart';
 
 class AirportsViewModel extends ChangeNotifier {
@@ -39,13 +38,12 @@ class AirportsViewModel extends ChangeNotifier {
   void onFilterOption(String value) {
     _state = state.copyWith(selectedFilterOption: value);
     notifyListeners();
+    onFilterChanged('');
   }
 
   void onFilterChanged(String value) {
-    logger.info('qwerasdf onFilterChanged $value');
     int selectedFilterOption =
         state.filterOptionList.indexOf(state.selectedFilterOption);
-    logger.info('qwerasdf onFilterChanged $selectedFilterOption');
     switch (selectedFilterOption) {
       case 0:
         airportsInfo = state.filteredData

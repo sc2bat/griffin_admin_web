@@ -91,6 +91,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
                                   onChanged: (String? value) {
                                     if (value != null) {
                                       viewModel.onFilterOption(value);
+                                      filterController.text = '';
                                     } else {
                                       logger.info('select error');
                                     }
