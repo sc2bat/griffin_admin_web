@@ -1,9 +1,9 @@
 import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
-import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
-import 'package:admin_web_app/data/repository/flights_repository_impl.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
+import 'package:admin_web_app/ui/flights/flights_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FlightsScreen extends StatefulWidget {
   const FlightsScreen({super.key});
@@ -13,84 +13,29 @@ class FlightsScreen extends StatefulWidget {
 }
 
 class _FlightsScreenState extends State<FlightsScreen> {
-  List<FlightsModel> flightsInfo = [];
-  List<AirportsModel> airportsInfo = [];
-  final flightRepository = FlightsRepositoryImpl();
-  final airportsRepository = AirportsRepositoryImpl();
   final departureLocFilter = TextEditingController();
-  bool sort = true;
-  int? sortColumnIndex;
 
-  Future<void> showFlightsInfo(
-      {String? date,
-      String? departureTime,
-      String? arrivalTime,
-      int? departureLoc,
-      int? arrivalLoc}) async {
-    flightsInfo = await flightRepository.getFlightsList(
-        date: date,
-        departureTime: departureTime,
-        arrivalTime: arrivalTime,
-        departureLoc: departureLoc,
-        arrivalLoc: arrivalLoc);
-    setState(() {});
-  }
-
-  Future<void> showAirportsInfo() async {
-    airportsInfo = await airportsRepository.getAirportsList();
-    setState(() {});
-  }
-
-  void onSort(int columnIndex, bool ascending) {
-    setState(() {
-      sortColumnIndex = columnIndex;
-      sort = ascending;
-    });
-
-    switch (columnIndex) {
-      // case 2:
-      //   {
-      //     if (ascending) {
-      //       flightsInfo.sort((a, b) => a.flightDate.compareTo(b.flightDate));
-      //     } else {
-      //       flightsInfo.sort((a, b) => b.flightDate.compareTo(a.flightDate));
-      //     }
-      //   }
-      //   break;
-      case 3:
-        {
-          if (ascending) {
-            flightsInfo
-                .sort((a, b) => a.departureTime.compareTo(b.departureTime));
-          } else {
-            flightsInfo
-                .sort((a, b) => b.departureTime.compareTo(a.departureTime));
-          }
-        }
-        break;
-      case 4:
-        {
-          if (ascending) {
-            flightsInfo.sort((a, b) => a.arrivalTime.compareTo(b.arrivalTime));
-          } else {
-            flightsInfo.sort((a, b) => b.arrivalTime.compareTo(a.arrivalTime));
-          }
-        }
-        break;
-      default:
-        break;
-    }
+  @override
+  void dispose() {
+    departureLocFilter.dispose();
+    super.dispose();
   }
 
   @override
   void initState() {
-    showFlightsInfo();
-    showAirportsInfo();
+    Future.microtask(() {
+      final FlightsViewModel flightsViewModel =
+          context.read<FlightsViewModel>();
+      flightsViewModel.showAirportsInfo();
+      flightsViewModel.showFlightsInfo();
+    });
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<FlightsViewModel>();
+    final state = viewModel.state;
     return Scaffold(
         appBar: AppBar(
           title: const Text('flights'),
@@ -207,8 +152,8 @@ class _FlightsScreenState extends State<FlightsScreen> {
                     ],
                   ),
                   PaginatedDataTable(
-                    sortColumnIndex: sortColumnIndex,
-                    sortAscending: sort,
+                    sortColumnIndex: state.sortColumnIndex,
+                    sortAscending: state.sort,
                     columns: [
                       const DataColumn(
                         label: Text('Flight Id'),
@@ -217,11 +162,11 @@ class _FlightsScreenState extends State<FlightsScreen> {
                         label: Text('Airplane Id'),
                       ),
                       DataColumn(
-                          label: const Text('Flight Date'), onSort: onSort),
+                          label: const Text('Flight Date'), onSort: viewModel.onSort),
                       DataColumn(
-                          label: const Text('Departure Time'), onSort: onSort),
+                          label: const Text('Departure Time'), onSort: viewModel.onSort),
                       DataColumn(
-                          label: const Text('Arrival Time'), onSort: onSort),
+                          label: const Text('Arrival Time'), onSort: viewModel.onSort),
                       const DataColumn(
                         label: Text('Departure Name'),
                       ),
@@ -229,7 +174,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
                         label: Text('Arrival Name'),
                       ),
                     ],
-                    source: FlightsDataTableSource(flightsInfo, airportsInfo),
+                    source: FlightsDataTableSource(viewModel.flightsInfo, state.airportsInfo),
                     rowsPerPage: 10,
                     horizontalMargin: 60,
                   ),
@@ -257,9 +202,9 @@ class FlightsDataTableSource extends DataTableSource {
     return DataRow(cells: [
       DataCell(Text('${flight.flightId}')),
       DataCell(Text('${flight.airplaneId}')),
-      // DataCell(Text(
-      //     '${flight.flightDate.substring(0, 4)}.${flight.flightDate.substring(4, 6)}.${flight.flightDate.substring(6)}')),
-      const DataCell(Text('0000')),
+      DataCell(Text(
+          '${flight.flightDate.substring(0, 4)}.${flight.flightDate.substring(4, 6)}.${flight.flightDate.substring(6)}')),
+      // const DataCell(Text('0000')),
       DataCell(Text(
           '${flight.departureTime.substring(0, 2)}:${flight.departureTime.substring(2)}')),
       DataCell(Text(
