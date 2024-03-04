@@ -6,6 +6,7 @@ import 'package:admin_web_app/ui/book/detail/book_detail_screen.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_view_model.dart';
 import 'package:admin_web_app/ui/airports/airports_view_model.dart';
 import 'package:admin_web_app/ui/flights/flights_screen.dart';
+import 'package:admin_web_app/ui/flights/flights_view_model.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
 import 'package:admin_web_app/ui/splash/index_screen.dart';
 import 'package:admin_web_app/ui/user/user_screen.dart';
@@ -31,7 +32,9 @@ final router = GoRouter(
     GoRoute(
       name: 'flights',
       path: '/flights',
-      builder: (_, __) => const FlightsScreen(
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => FlightsViewModel(),
+        child: const FlightsScreen(),
       ),
       routes: [
         GoRoute(
