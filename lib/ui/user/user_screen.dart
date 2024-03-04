@@ -1,5 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:admin_web_app/data/model/user_model.dart';
+import 'package:admin_web_app/data/model/user/user_model.dart';
 import 'package:admin_web_app/ui/user/user_state.dart';
 import 'package:admin_web_app/ui/user/user_view_model.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
@@ -23,7 +23,7 @@ class _UserScreenState extends State<UserScreen> {
     Future.microtask(() {
       final UserViewModel userViewModel = context.read<UserViewModel>();
 
-      // userViewModel.getUserList();
+      userViewModel.init();
     });
     showingTooltip = -1;
     super.initState();
@@ -87,18 +87,7 @@ class _UserScreenState extends State<UserScreen> {
   @override
   Widget build(BuildContext context) {
     final UserViewModel userViewModel = context.watch();
-    final UserState userState = userViewModel.state;
-
-    // 유저 목 데이터
-    List<UserModel> dumpUserList = List.generate(
-      60,
-      (index) => UserModel(
-        userId: index,
-        email: '$index@test.com',
-        userName: 'name_$index',
-        isDeleted: 0,
-      ),
-    );
+    final UserState userState = userViewModel.userState;
 
     // 차트 목 데이터
     List<Map<String, dynamic>> userCountByDate = [
@@ -147,156 +136,168 @@ class _UserScreenState extends State<UserScreen> {
       body: Container(
         padding: const EdgeInsets.all(8.0),
         child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
               child: CommonMenuListWidget(context: context),
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.8,
-                      height: 320.0,
-                      child: Row(
+            userState.isLoading
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : Expanded(
+                    child: SingleChildScrollView(
+                      child: Column(
                         children: [
                           SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.2,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                            width: MediaQuery.of(context).size.width * 0.8,
+                            height: 320.0,
+                            child: Row(
                               children: [
-                                const Flexible(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text('총 사용자 계정 수'),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.2,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      const Flexible(
+                                        child: Padding(
+                                          padding: EdgeInsets.all(8.0),
+                                          child: Text('총 사용자 계정 수'),
+                                        ),
+                                      ),
+                                      const SizedBox(
+                                        height: 8.0,
+                                      ),
+                                      Text('${userState.userList.length}'),
+                                    ],
                                   ),
                                 ),
-                                const SizedBox(
-                                  height: 8.0,
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(24.0),
+                                    child: Column(
+                                      children: [
+                                        const Text('일별 신규 사용자 수'),
+                                        const SizedBox(
+                                          height: 16.0,
+                                        ),
+                                        SizedBox(
+                                          height: 224.0,
+                                          child: AspectRatio(
+                                            aspectRatio: 2.0,
+                                            child: BarChart(
+                                              BarChartData(
+                                                barGroups: List.generate(
+                                                  userCountByDate.length,
+                                                  (index) => generateGroupData(
+                                                    index,
+                                                    userCountByDate[index]
+                                                        ['cnt'],
+                                                  ),
+                                                ),
+                                                titlesData: FlTitlesData(
+                                                  show: true,
+                                                  topTitles: const AxisTitles(
+                                                    sideTitles: SideTitles(
+                                                        showTitles: false),
+                                                  ),
+                                                  rightTitles: const AxisTitles(
+                                                    sideTitles: SideTitles(
+                                                        showTitles: false),
+                                                  ),
+                                                  bottomTitles: AxisTitles(
+                                                    sideTitles: SideTitles(
+                                                      showTitles: true,
+                                                      getTitlesWidget:
+                                                          bottomTitles,
+                                                    ),
+                                                  ),
+                                                  leftTitles: AxisTitles(
+                                                    sideTitles: SideTitles(
+                                                      showTitles: true,
+                                                      getTitlesWidget:
+                                                          leftTitles,
+                                                    ),
+                                                  ),
+                                                ),
+                                                barTouchData: BarTouchData(
+                                                  enabled: true,
+                                                  handleBuiltInTouches: false,
+                                                  touchCallback:
+                                                      (event, response) {
+                                                    if (response != null &&
+                                                        response.spot != null &&
+                                                        event is FlTapUpEvent) {
+                                                      setState(
+                                                        () {
+                                                          final x = response
+                                                              .spot!
+                                                              .touchedBarGroup
+                                                              .x;
+                                                          final isShowing =
+                                                              showingTooltip ==
+                                                                  x;
+                                                          if (isShowing) {
+                                                            showingTooltip = -1;
+                                                          } else {
+                                                            showingTooltip = x;
+                                                          }
+                                                        },
+                                                      );
+                                                    }
+                                                  },
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
                                 ),
-                                // Text('${userState.userList.length}'),
-                                Text('${dumpUserList.length}'),
                               ],
                             ),
                           ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(24.0),
-                              child: Column(
-                                children: [
-                                  const Text('일별 신규 사용자 수'),
-                                  const SizedBox(
-                                    height: 16.0,
-                                  ),
-                                  SizedBox(
-                                    height: 224.0,
-                                    child: AspectRatio(
-                                      aspectRatio: 2.0,
-                                      child: BarChart(
-                                        BarChartData(
-                                          barGroups: List.generate(
-                                            userCountByDate.length,
-                                            (index) => generateGroupData(
-                                              index,
-                                              userCountByDate[index]['cnt'],
-                                            ),
-                                          ),
-                                          titlesData: FlTitlesData(
-                                            show: true,
-                                            topTitles: const AxisTitles(
-                                              sideTitles:
-                                                  SideTitles(showTitles: false),
-                                            ),
-                                            rightTitles: const AxisTitles(
-                                              sideTitles:
-                                                  SideTitles(showTitles: false),
-                                            ),
-                                            bottomTitles: AxisTitles(
-                                              sideTitles: SideTitles(
-                                                showTitles: true,
-                                                getTitlesWidget: bottomTitles,
-                                              ),
-                                            ),
-                                            leftTitles: AxisTitles(
-                                              sideTitles: SideTitles(
-                                                showTitles: true,
-                                                getTitlesWidget: leftTitles,
-                                              ),
-                                            ),
-                                          ),
-                                          barTouchData: BarTouchData(
-                                            enabled: true,
-                                            handleBuiltInTouches: false,
-                                            touchCallback: (event, response) {
-                                              if (response != null &&
-                                                  response.spot != null &&
-                                                  event is FlTapUpEvent) {
-                                                setState(
-                                                  () {
-                                                    final x = response.spot!
-                                                        .touchedBarGroup.x;
-                                                    final isShowing =
-                                                        showingTooltip == x;
-                                                    if (isShowing) {
-                                                      showingTooltip = -1;
-                                                    } else {
-                                                      showingTooltip = x;
-                                                    }
-                                                  },
-                                                );
-                                              }
-                                            },
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                          PaginatedDataTable(
+                            columns: [
+                              const DataColumn(
+                                label: Text('No.'),
                               ),
+                              DataColumn(
+                                label: const Text('사용자 아이디'),
+                                onSort: (columnIndex, ascending) {},
+                              ),
+                              const DataColumn(
+                                label: Text('이메일'),
+                              ),
+                              const DataColumn(
+                                label: Text('사용자명'),
+                              ),
+                              const DataColumn(
+                                label: Text('계정상태'),
+                              ),
+                              const DataColumn(
+                                label: Text('보기'),
+                              ),
+                              const DataColumn(
+                                label: Text('수정'),
+                              ),
+                              const DataColumn(
+                                label: Text('삭제'),
+                              ),
+                            ],
+                            source: _UserData(
+                              context,
+                              // userState.userList,
+                              userState.userList,
                             ),
                           ),
                         ],
                       ),
                     ),
-                    PaginatedDataTable(
-                      columns: [
-                        const DataColumn(
-                          label: Text('No.'),
-                        ),
-                        DataColumn(
-                          label: const Text('사용자 아이디'),
-                          onSort: (columnIndex, ascending) {},
-                        ),
-                        const DataColumn(
-                          label: Text('이메일'),
-                        ),
-                        const DataColumn(
-                          label: Text('사용자명'),
-                        ),
-                        const DataColumn(
-                          label: Text('계정상태'),
-                        ),
-                        const DataColumn(
-                          label: Text('보기'),
-                        ),
-                        const DataColumn(
-                          label: Text('수정'),
-                        ),
-                        const DataColumn(
-                          label: Text('삭제'),
-                        ),
-                      ],
-                      source: _UserData(
-                        context,
-                        // userState.userList,
-                        dumpUserList,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+                  ),
           ],
         ),
       ),

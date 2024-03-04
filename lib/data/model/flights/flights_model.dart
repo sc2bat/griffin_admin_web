@@ -1,8 +1,9 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
+// ignore_for_file: invalid_annotation_target
+
 import 'package:flutter/foundation.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'flights_model.freezed.dart';
-
 part 'flights_model.g.dart';
 
 @freezed
@@ -17,5 +18,6 @@ class FlightsModel with _$FlightsModel {
     @JsonKey(name: 'is_deleted') required int isDeleted,
   }) = _FlightsModel;
 
-  factory FlightsModel.fromJson(Map<String, Object?> json) => _$FlightsModelFromJson(json);
+  factory FlightsModel.fromJson(Map<String, Object?> json) =>
+      _$FlightsModelFromJson(json);
 }

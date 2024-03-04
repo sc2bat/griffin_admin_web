@@ -8,13 +8,18 @@ import 'package:admin_web_app/utils/simple_logger.dart';
 
 class BookRepositoryImpl implements BookRepository {
   @override
-  Future<List<BookModel>> getBookList() async {
+  Future<List<BookModel>> getBookList(Map<String, dynamic> paramData) async {
     try {
-      final response = await fetchHttp(Env.mockBookUrl);
+      final response = await fetchHttpWithParam(
+        url: '${Env.adminHostUrl}/payment/',
+        paramData: paramData,
+      );
 
-      final List<dynamic> jsonData = jsonDecode(response.body);
+      final jsonData = jsonDecode(response.body);
 
-      return jsonData.map((e) => BookModel.fromJson(e)).toList();
+      final List<dynamic> result = jsonData['result'];
+
+      return result.map((e) => BookModel.fromJson(e)).toList();
     } catch (e) {
       logger.info('BookRepository getBookList => $e');
       throw Exception(e);

@@ -1,7 +1,7 @@
 import 'package:admin_web_app/data/model/book/book_model.dart';
 
 abstract interface class BookRepository {
-  Future<List<BookModel>> getBookList();
+  Future<List<BookModel>> getBookList(Map<String, dynamic> paramData);
   Future<BookModel> getBookOne(int bookId);
   Future<BookModel> updateBook(BookModel bookModel);
   Future<BookModel> deleteBook(int bookId);

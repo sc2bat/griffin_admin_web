@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:admin_web_app/data/model/book/book_model.dart';
 import 'package:admin_web_app/ui/book/book_state.dart';
 import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -35,7 +34,7 @@ class _BookScreenState extends State<BookScreen> {
   @override
   Widget build(BuildContext context) {
     final BookViewModel bookViewModel = context.watch<BookViewModel>();
-    final BookState bookState = bookViewModel.state;
+    final BookState bookState = bookViewModel.bookState;
 
     return Scaffold(
       appBar: AppBar(
@@ -47,58 +46,285 @@ class _BookScreenState extends State<BookScreen> {
         child: Padding(
           padding: const EdgeInsets.all(8.0),
           child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
                 child: CommonMenuListWidget(context: context),
               ),
               Expanded(
-                child: Column(
-                  children: [
-                    PaginatedDataTable(
-                      columns: [
-                        const DataColumn(
-                          label: Text('No.'),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select Item',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                  items: bookState.bookOptionYear
+                                      .map((int item) =>
+                                          DropdownMenuItem<String>(
+                                            value: '$item',
+                                            child: Text(
+                                              '$item 년',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: '${bookState.selectedYear}',
+                                  onChanged: (String? value) {
+                                    if (value != null) {
+                                      bookViewModel
+                                          .selectYear(int.parse(value));
+                                    } else {
+                                      logger.info('year select error');
+                                    }
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 40,
+                                    width: 140,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                ),
+                              ),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select Item',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                  items: bookState.bookOptionMonth
+                                      .map((int item) =>
+                                          DropdownMenuItem<String>(
+                                            value: '$item',
+                                            child: Text(
+                                              '$item 월',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: '${bookState.selectedMonth}',
+                                  onChanged: (String? value) {
+                                    if (value != null) {
+                                      bookViewModel
+                                          .selectMonth(int.parse(value));
+                                    } else {
+                                      logger.info('year select error');
+                                    }
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 40,
+                                    width: 140,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                ),
+                              ),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select Item',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                  items: bookState.bookOptionDay
+                                      .map((int item) =>
+                                          DropdownMenuItem<String>(
+                                            value: '$item',
+                                            child: Text(
+                                              '$item 일',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: '${bookState.selectedDay}',
+                                  onChanged: (String? value) {
+                                    if (value != null) {
+                                      bookViewModel.selectDay(int.parse(value));
+                                    } else {
+                                      logger.info('year select error');
+                                    }
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 40,
+                                    width: 140,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                ),
+                              ),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select Item',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                  items: bookState.bookStatusOption
+                                      .map((String item) =>
+                                          DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              '$item 일',
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: '${bookState.selectedDay}',
+                                  onChanged: (String? value) {
+                                    if (value != null) {
+                                      bookViewModel.selectDay(int.parse(value));
+                                    } else {
+                                      logger.info('year select error');
+                                    }
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 40,
+                                    width: 140,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                ),
+                              ),
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select PayStatus',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                  items: bookState.bookPayStatusOption
+                                      .map((String item) =>
+                                          DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: '${bookState.selectedPayStatus}',
+                                  onChanged: (String? value) {
+                                    if (value != null) {
+                                      bookViewModel.selectDay(int.parse(value));
+                                    } else {
+                                      logger.info('year select error');
+                                    }
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 40,
+                                    width: 140,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                ),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  bookViewModel.getBookList();
+                                },
+                                child: const Text('조회'),
+                              ),
+                            ],
+                          ),
                         ),
-                        DataColumn(
-                          label: const Text('예약 ID'),
-                          onSort: (columnIndex, ascending) {},
-                        ),
-                        const DataColumn(
-                          label: Text('비행일'),
-                        ),
-                        const DataColumn(
-                          label: Text('비행편 ID'),
-                        ),
-                        const DataColumn(
-                          label: Text('예약자 ID'),
-                        ),
-                        const DataColumn(
-                          label: Text('예약자 명'),
-                        ),
-                        const DataColumn(
-                          label: Text('예약상태'),
-                        ),
-                        const DataColumn(
-                          label: Text('결제상태'),
-                        ),
-                        const DataColumn(
-                          label: Text('보기'),
-                        ),
-                        const DataColumn(
-                          label: Text('수정'),
-                        ),
-                        const DataColumn(
-                          label: Text('삭제'),
-                        ),
-                      ],
-                      source: _BookData(
-                        context,
-                        // userState.userList,
-                        dumpBookList,
                       ),
-                    ),
-                  ],
+                      PaginatedDataTable(
+                        columns: [
+                          const DataColumn(
+                            label: Text('No.'),
+                          ),
+                          DataColumn(
+                            label: const Text('예약 ID'),
+                            onSort: (columnIndex, ascending) {},
+                          ),
+                          const DataColumn(
+                            label: Text('비행일'),
+                          ),
+                          const DataColumn(
+                            label: Text('비행편 ID'),
+                          ),
+                          const DataColumn(
+                            label: Text('예약자 ID'),
+                          ),
+                          const DataColumn(
+                            label: Text('예약자 명'),
+                          ),
+                          const DataColumn(
+                            label: Text('예약상태'),
+                          ),
+                          const DataColumn(
+                            label: Text('결제상태'),
+                          ),
+                          const DataColumn(
+                            label: Text('보기'),
+                          ),
+                          const DataColumn(
+                            label: Text('수정'),
+                          ),
+                          const DataColumn(
+                            label: Text('삭제'),
+                          ),
+                        ],
+                        source: _BookData(
+                          context,
+                          // userState.userList,
+                          bookState.bookList,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -108,22 +334,6 @@ class _BookScreenState extends State<BookScreen> {
     );
   }
 }
-
-List<BookModel> dumpBookList = List.generate(
-  100,
-  (index) => BookModel(
-    bookId: index + 1,
-    flightId: Random().nextInt(10000),
-    flightDate: '20240220',
-    userId: Random().nextInt(10),
-    userName: 'user$index',
-    classSeat: 'C$index',
-    bookStatus: Random().nextInt(3),
-    payStatus: Random().nextInt(3),
-    payAmount: Random().nextInt(1000000),
-    createdAt: '2024011${Random().nextInt(10)}',
-  ),
-);
 
 class _BookData extends DataTableSource {
   final BuildContext context;
@@ -179,11 +389,11 @@ class _BookData extends DataTableSource {
       ),
       DataCell(
         Text(
-          item.bookStatus == 0
+          item.status == 0
               ? '예약 중'
-              : item.bookStatus == 1
+              : item.status == 1
                   ? '예약완료'
-                  : item.bookStatus == 4
+                  : item.status == 4
                       ? '예약취소'
                       : '오류',
         ),
