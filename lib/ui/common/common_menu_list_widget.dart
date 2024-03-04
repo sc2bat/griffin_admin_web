@@ -33,12 +33,12 @@ final List<Map<String, dynamic>> menuList = [
   {
     'menuid': '2',
     'name': 'flights',
-    'icon': const Icon(Icons.flight),
+    'icon': const Icon(Icons.flight_takeoff_rounded),
   },
   {
     'menuid': '3',
     'name': 'airports',
-    'icon': const Icon(Icons.home),
+    'icon': const Icon(Icons.flight_rounded),
   },
   {
     'menuid': '4',
@@ -103,7 +103,9 @@ List<Widget> menuWidgetList(
             ),
           ),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: width > 500
+                ? MainAxisAlignment.start
+                : MainAxisAlignment.center,
             children: [
               Padding(
                 padding: const EdgeInsets.all(8.0),
