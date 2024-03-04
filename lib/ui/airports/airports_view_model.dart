@@ -1,6 +1,7 @@
 import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
 import 'package:admin_web_app/ui/airports/airports_state.dart';
+import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:flutter/cupertino.dart';
 
 class AirportsViewModel extends ChangeNotifier {
@@ -20,8 +21,53 @@ class AirportsViewModel extends ChangeNotifier {
 
   void onChanged(String value) {
     airportsInfo = state.filteredData
-        .where((element) => element.airportName.toLowerCase().contains(value.toLowerCase()))
+        .where((element) =>
+            element.airportName.toLowerCase().contains(value.toLowerCase()))
         .toList();
+    notifyListeners();
+  }
+
+  void filterOptionInit() {
+    List<String> filterOptionList = ['공항코드', '공항명', '국가코드'];
+    _state = state.copyWith(
+        filterOptionList: filterOptionList,
+        selectedFilterOption: filterOptionList[1]);
+
+    notifyListeners();
+  }
+
+  void onFilterOption(String value) {
+    _state = state.copyWith(selectedFilterOption: value);
+    notifyListeners();
+  }
+
+  void onFilterChanged(String value) {
+    logger.info('qwerasdf onFilterChanged $value');
+    int selectedFilterOption =
+        state.filterOptionList.indexOf(state.selectedFilterOption);
+    logger.info('qwerasdf onFilterChanged $selectedFilterOption');
+    switch (selectedFilterOption) {
+      case 0:
+        airportsInfo = state.filteredData
+            .where((element) =>
+                element.airportCode.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+        break;
+      case 1:
+        airportsInfo = state.filteredData
+            .where((element) =>
+                element.airportName.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+        break;
+      case 2:
+        airportsInfo = state.filteredData
+            .where((element) =>
+                element.country.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+        break;
+      default:
+        break;
+    }
     notifyListeners();
   }
 
