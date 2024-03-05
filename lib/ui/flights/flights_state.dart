@@ -11,6 +11,12 @@ class FlightsState with _$FlightsState {
   const factory FlightsState({
     @Default([]) List<AirportsModel> airportsInfo,
     @Default(true) bool sort,
+    @Default([]) List<int> flightOptionYear,
+    @Default([]) List<int> flightOptionMonth,
+    @Default([]) List<int> flightOptionDay,
+    @Default(2024) int selectedYear,
+    @Default(1) int selectedMonth,
+    @Default(1) int selectedDay,
     int? sortColumnIndex,
   }) = _FlightsState;
 

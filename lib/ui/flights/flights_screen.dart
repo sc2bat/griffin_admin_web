@@ -2,6 +2,8 @@ import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:admin_web_app/ui/flights/flights_view_model.dart';
+import 'package:admin_web_app/utils/simple_logger.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,8 +28,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
     Future.microtask(() {
       final FlightsViewModel flightsViewModel =
           context.read<FlightsViewModel>();
-      flightsViewModel.showAirportsInfo();
-      flightsViewModel.showFlightsInfo();
+      flightsViewModel.init();
     });
     super.initState();
   }
@@ -58,21 +59,141 @@ class _FlightsScreenState extends State<FlightsScreen> {
                           child: Column(
                             children: [
                               Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.center,
                                 children: [
-                                  const Text('비행일 : '),
-                                  const Expanded(
-                                      child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide()),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide()),
-                                        hintText: 'yyyymmdd',
+                                  DropdownButtonHideUnderline(
+                                    child: DropdownButton2<String>(
+                                      isExpanded: true,
+                                      hint: Text(
+                                        'Select Item',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context).hintColor,
+                                        ),
+                                      ),
+                                      items: state.flightOptionYear
+                                          .map((int item) =>
+                                              DropdownMenuItem<String>(
+                                                value: '$item',
+                                                child: Text(
+                                                  '$item 년',
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
+                                      value: '${state.selectedYear}',
+                                      onChanged: (String? value) {
+                                        if (value != null) {
+                                          viewModel
+                                              .selectYear(int.parse(value));
+                                        } else {
+                                          logger.info('year select error');
+                                        }
+                                      },
+                                      buttonStyleData: const ButtonStyleData(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        height: 40,
+                                        width: 140,
+                                      ),
+                                      menuItemStyleData:
+                                          const MenuItemStyleData(
+                                        height: 40,
                                       ),
                                     ),
-                                  )),
+                                  ),
+                                  DropdownButtonHideUnderline(
+                                    child: DropdownButton2<String>(
+                                      isExpanded: true,
+                                      hint: Text(
+                                        'Select Item',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context).hintColor,
+                                        ),
+                                      ),
+                                      items: state.flightOptionMonth
+                                          .map((int item) =>
+                                              DropdownMenuItem<String>(
+                                                value: '$item',
+                                                child: Text(
+                                                  '$item 월',
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
+                                      value: '${state.selectedMonth}',
+                                      onChanged: (String? value) {
+                                        if (value != null) {
+                                          viewModel
+                                              .selectMonth(int.parse(value));
+                                        } else {
+                                          logger.info('year select error');
+                                        }
+                                      },
+                                      buttonStyleData: const ButtonStyleData(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        height: 40,
+                                        width: 140,
+                                      ),
+                                      menuItemStyleData:
+                                          const MenuItemStyleData(
+                                        height: 40,
+                                      ),
+                                    ),
+                                  ),
+                                  DropdownButtonHideUnderline(
+                                    child: DropdownButton2<String>(
+                                      isExpanded: true,
+                                      hint: Text(
+                                        'Select Item',
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Theme.of(context).hintColor,
+                                        ),
+                                      ),
+                                      items: state.flightOptionDay
+                                          .map((int item) =>
+                                              DropdownMenuItem<String>(
+                                                value: '$item',
+                                                child: Text(
+                                                  '$item 일',
+                                                  style: const TextStyle(
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ))
+                                          .toList(),
+                                      value: '${state.selectedDay}',
+                                      onChanged: (String? value) {
+                                        if (value != null) {
+                                          viewModel.selectDay(int.parse(value));
+                                        } else {
+                                          logger.info('year select error');
+                                        }
+                                      },
+                                      buttonStyleData: const ButtonStyleData(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 16),
+                                        height: 40,
+                                        width: 140,
+                                      ),
+                                      menuItemStyleData:
+                                          const MenuItemStyleData(
+                                        height: 40,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Row(
+                                children: [
                                   const Text('출발지 : '),
                                   Expanded(
                                       child: Padding(
@@ -140,13 +261,10 @@ class _FlightsScreenState extends State<FlightsScreen> {
                       Padding(
                         padding: const EdgeInsets.all(16.0),
                         child: ElevatedButton(
-                          // onPressed: () {
-                          //   showFlightsInfo(
-                          //       departureLoc:
-                          //           int.parse(departureLocFilter.text));
-                          // },
-                          onPressed: () {},
-                          child: const Text('확인'),
+                          onPressed: () {
+                            viewModel.showFlightsInfo();
+                          },
+                          child: const Text('조회'),
                         ),
                       )
                     ],
@@ -162,11 +280,14 @@ class _FlightsScreenState extends State<FlightsScreen> {
                         label: Text('Airplane Id'),
                       ),
                       DataColumn(
-                          label: const Text('Flight Date'), onSort: viewModel.onSort),
+                          label: const Text('Flight Date'),
+                          onSort: viewModel.onSort),
                       DataColumn(
-                          label: const Text('Departure Time'), onSort: viewModel.onSort),
+                          label: const Text('Departure Time'),
+                          onSort: viewModel.onSort),
                       DataColumn(
-                          label: const Text('Arrival Time'), onSort: viewModel.onSort),
+                          label: const Text('Arrival Time'),
+                          onSort: viewModel.onSort),
                       const DataColumn(
                         label: Text('Departure Name'),
                       ),
@@ -174,7 +295,8 @@ class _FlightsScreenState extends State<FlightsScreen> {
                         label: Text('Arrival Name'),
                       ),
                     ],
-                    source: FlightsDataTableSource(viewModel.flightsInfo, state.airportsInfo),
+                    source: FlightsDataTableSource(
+                        viewModel.flightsInfo, state.airportsInfo),
                     rowsPerPage: 10,
                     horizontalMargin: 60,
                   ),
