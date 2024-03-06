@@ -48,8 +48,15 @@ class FlightsViewModel extends ChangeNotifier {
             '${state.selectedYear}${state.selectedMonth.toString().padLeft(2, '0')}${state.selectedDay.toString().padLeft(2, '0')}',
         departureTime: departureTime,
         arrivalTime: arrivalTime,
-        departureLoc: departureLoc ,
+        departureLoc: departureLoc,
         arrivalLoc: arrivalLoc);
+    notifyListeners();
+  }
+
+  Future<void> resetFlightsInfo() async {
+    _state = state.copyWith(selectedDepartureLoc: null);
+    _state = state.copyWith(selectedArrivalLoc: null);
+    init();
     notifyListeners();
   }
 

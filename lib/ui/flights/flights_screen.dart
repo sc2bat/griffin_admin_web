@@ -251,13 +251,26 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                       ),
                                     ),
                                   ),
-                                  SizedBox(width: MediaQuery.of(context).size.width *
-                                      0.01,),
-                                  const Icon(Icons.more_horiz,color: Colors.grey,),
-                                  const Icon(Icons.flight_takeoff_outlined,color: Colors.grey,),
-                                  const Icon(Icons.more_horiz,color: Colors.grey,),
-                                  SizedBox(width: MediaQuery.of(context).size.width *
-                                      0.01,),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.01,
+                                  ),
+                                  const Icon(
+                                    Icons.more_horiz,
+                                    color: Colors.grey,
+                                  ),
+                                  const Icon(
+                                    Icons.flight_takeoff_outlined,
+                                    color: Colors.grey,
+                                  ),
+                                  const Icon(
+                                    Icons.more_horiz,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.01,
+                                  ),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.35,
@@ -313,49 +326,32 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                 ],
                               ),
                             ),
-                            const Row(
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
                               children: [
-                                Text('출발시간 : '),
-                                Expanded(
-                                    child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide()),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide()),
-                                        hintText: '1240'),
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      viewModel.resetFlightsInfo();
+                                    },
+                                    child: const Text('Reset'),
                                   ),
-                                )),
-                                Text('도착시간 : '),
-                                Expanded(
-                                    child: Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                        focusedBorder: OutlineInputBorder(
-                                            borderSide: BorderSide()),
-                                        enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide()),
-                                        hintText: '1240'),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.all(16.0),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      viewModel.showFlightsInfo();
+                                    },
+                                    child: const Text('Search'),
                                   ),
-                                )),
+                                ),
                               ],
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: ElevatedButton(
-                                onPressed: () {
-                                  viewModel.showFlightsInfo();
-                                },
-                                child: const Text('조회'),
-                              ),
                             )
                           ],
                         ),
                       ),
-
                     ],
                   ),
                   PaginatedDataTable(
@@ -422,8 +418,6 @@ class FlightsDataTableSource extends DataTableSource {
           '${flight.arrivalTime.substring(0, 2)}:${flight.arrivalTime.substring(2)}')),
       DataCell(Text(departureName.airportName)),
       DataCell(Text(arrivalName.airportName)),
-      // DataCell(Text('${flight.departureLoc}')),
-      // DataCell(Text('${flight.arrivalLoc}')),
     ]);
   }
 
