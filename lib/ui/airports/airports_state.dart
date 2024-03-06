@@ -11,8 +11,10 @@ part 'airports_state.g.dart';
 class AirportsState with _$AirportsState {
   const factory AirportsState({
     @Default(true) bool sort,
-    int? sortColumnIndex,
     @Default([]) List<AirportsModel> filteredData,
+    @Default([]) List<AirportsModel> airportInfo,
+    @Default(false) bool isLoading,
+    int? sortColumnIndex,
   }) = _AirportsState;
 
   factory AirportsState.fromJson(Map<String, Object?> json) =>

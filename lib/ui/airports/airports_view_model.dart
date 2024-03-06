@@ -8,27 +8,34 @@ class AirportsViewModel extends ChangeNotifier {
 
   AirportsState get state => _state;
 
-  List<AirportsModel> airportsInfo = [];
-
   final repository = AirportsRepositoryImpl();
 
   Future<void> showAirportsInfo() async {
-    airportsInfo = await repository.getAirportsList();
-    _state = state.copyWith(filteredData: airportsInfo);
+    _state = state.copyWith(isLoading: true);
+    notifyListeners();
+
+    _state = state.copyWith(airportInfo: await repository.getAirportsList());
+    _state = state.copyWith(filteredData: state.airportInfo);
+    _state = state.copyWith(isLoading: false);
     notifyListeners();
   }
 
   void onChanged(String value) {
-    airportsInfo = state.filteredData
-        .where((element) => element.airportName.toLowerCase().contains(value.toLowerCase()))
-        .toList();
+    _state = state.copyWith(
+        airportInfo: state.filteredData
+            .where((element) =>
+                element.airportName.toLowerCase().contains(value.toLowerCase()))
+            .toList());
     notifyListeners();
   }
 
   void onSort(int columnIndex, bool ascending) {
+    List<AirportsModel> airportsInfo = List.from(state.airportInfo);
     _state = state.copyWith(sortColumnIndex: columnIndex);
     _state = state.copyWith(sort: ascending);
     notifyListeners();
+
+    _state = state.copyWith(airportInfo: airportsInfo);
 
     switch (columnIndex) {
       case 0:
