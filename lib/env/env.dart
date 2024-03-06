@@ -8,6 +8,10 @@ abstract class Env {
   @EnviedField()
   static const String adminHostUrl = _Env.adminHostUrl;
 
+  // ADMIN_SIGN_URL
+  @EnviedField()
+  static const String adminSignUrl = _Env.adminSignUrl;
+
   // GRIFFIN_FLIGHT_URL
   @EnviedField()
   static const String griffinFlightUrl = _Env.griffinFlightUrl;
