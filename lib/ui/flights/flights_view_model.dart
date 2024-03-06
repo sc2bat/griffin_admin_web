@@ -21,8 +21,10 @@ class FlightsViewModel extends ChangeNotifier {
     // 날짜 선택 옵션
     updateSelectDayOption();
     // 예약 데이터 불러오기
+
     await showAirportsInfo();
     await showFlightsInfo();
+    await getAirportsName();
   }
 
   Future<void> showFlightsInfo(
@@ -31,12 +33,22 @@ class FlightsViewModel extends ChangeNotifier {
       String? arrivalTime,
       int? departureLoc,
       int? arrivalLoc}) async {
+    if (state.selectedDepartureLoc != null) {
+      departureLoc = state.airportsInfo
+          .firstWhere((e) => e.airportName == state.selectedDepartureLoc)
+          .airportId;
+    }
+    if (state.selectedArrivalLoc != null) {
+      arrivalLoc = state.airportsInfo
+          .firstWhere((e) => e.airportName == state.selectedArrivalLoc)
+          .airportId;
+    }
     flightsInfo = await flightRepository.getFlightsList(
         date:
             '${state.selectedYear}${state.selectedMonth.toString().padLeft(2, '0')}${state.selectedDay.toString().padLeft(2, '0')}',
         departureTime: departureTime,
         arrivalTime: arrivalTime,
-        departureLoc: departureLoc,
+        departureLoc: departureLoc ,
         arrivalLoc: arrivalLoc);
     notifyListeners();
   }
@@ -89,6 +101,12 @@ class FlightsViewModel extends ChangeNotifier {
     updateSelectDayOption();
   }
 
+  Future<void> getAirportsName() async {
+    _state = state.copyWith(
+        airportsName:
+            state.airportsInfo.map((e) => e.airportName).toSet().toList());
+  }
+
   void onSort(int columnIndex, bool ascending) {
     _state = state.copyWith(sortColumnIndex: columnIndex);
     _state = state.copyWith(sort: ascending);
@@ -127,5 +145,15 @@ class FlightsViewModel extends ChangeNotifier {
       default:
         break;
     }
+  }
+
+  void onChangeDepartureLoc(String? value) {
+    _state = state.copyWith(selectedDepartureLoc: value);
+    notifyListeners();
+  }
+
+  void onChangeArrivalLoc(String? value) {
+    _state = state.copyWith(selectedArrivalLoc: value);
+    notifyListeners();
   }
 }

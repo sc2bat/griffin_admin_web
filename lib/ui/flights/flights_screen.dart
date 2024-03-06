@@ -16,10 +16,12 @@ class FlightsScreen extends StatefulWidget {
 
 class _FlightsScreenState extends State<FlightsScreen> {
   final departureLocFilter = TextEditingController();
+  final arrivalLocFilter = TextEditingController();
 
   @override
   void dispose() {
     departureLocFilter.dispose();
+    arrivalLocFilter.dispose();
     super.dispose();
   }
 
@@ -54,13 +56,12 @@ class _FlightsScreenState extends State<FlightsScreen> {
                   Row(
                     children: [
                       Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.center,
+                        child: Column(
+                          children: [
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   DropdownButtonHideUnderline(
                                     child: DropdownButton2<String>(
@@ -192,81 +193,169 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                   ),
                                 ],
                               ),
-                              Row(
+                            ),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
                                 children: [
-                                  const Text('출발지 : '),
-                                  Expanded(
-                                      child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      controller: departureLocFilter,
-                                      decoration: const InputDecoration(
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide()),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide()),
-                                          hintText: 'ICN'),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton2<String>(
+                                        isExpanded: true,
+                                        hint: Text(
+                                          'Select departure airport',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme.of(context).hintColor,
+                                          ),
+                                        ),
+                                        items: state.airportsName
+                                            .map((item) => DropdownMenuItem(
+                                                value: item, child: Text(item)))
+                                            .toList(),
+                                        value: state.selectedDepartureLoc,
+                                        onChanged:
+                                            viewModel.onChangeDepartureLoc,
+                                        dropdownSearchData: DropdownSearchData(
+                                          searchInnerWidgetHeight: 50,
+                                          searchController: departureLocFilter,
+                                          searchInnerWidget: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextFormField(
+                                              controller: departureLocFilter,
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Search for a departure airport',
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          searchMatchFn: (item, searchValue) {
+                                            return item.value
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(
+                                                    searchValue.toLowerCase());
+                                          },
+                                        ),
+                                        onMenuStateChange: (isOpen) {
+                                          if (!isOpen) {
+                                            departureLocFilter.clear();
+                                          }
+                                        },
+                                      ),
                                     ),
-                                  )),
-                                  const Text('도착지 : '),
-                                  const Expanded(
-                                      child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide()),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide()),
-                                          hintText: 'ICN'),
+                                  ),
+                                  SizedBox(width: MediaQuery.of(context).size.width *
+                                      0.01,),
+                                  const Icon(Icons.more_horiz,color: Colors.grey,),
+                                  const Icon(Icons.flight_takeoff_outlined,color: Colors.grey,),
+                                  const Icon(Icons.more_horiz,color: Colors.grey,),
+                                  SizedBox(width: MediaQuery.of(context).size.width *
+                                      0.01,),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.35,
+                                    child: DropdownButtonHideUnderline(
+                                      child: DropdownButton2<String>(
+                                        isExpanded: true,
+                                        hint: Text(
+                                          'Select arrival airport',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Theme.of(context).hintColor,
+                                          ),
+                                        ),
+                                        items: state.airportsName
+                                            .map((item) => DropdownMenuItem(
+                                                value: item, child: Text(item)))
+                                            .toList(),
+                                        value: state.selectedArrivalLoc,
+                                        onChanged: viewModel.onChangeArrivalLoc,
+                                        dropdownSearchData: DropdownSearchData(
+                                          searchInnerWidgetHeight: 50,
+                                          searchController: arrivalLocFilter,
+                                          searchInnerWidget: Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: TextFormField(
+                                              controller: arrivalLocFilter,
+                                              decoration: InputDecoration(
+                                                hintText:
+                                                    'Search for a arrival airport',
+                                                border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(8),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          searchMatchFn: (item, searchValue) {
+                                            return item.value
+                                                .toString()
+                                                .toLowerCase()
+                                                .contains(
+                                                    searchValue.toLowerCase());
+                                          },
+                                        ),
+                                        onMenuStateChange: (isOpen) {
+                                          if (!isOpen) {
+                                            arrivalLocFilter.clear();
+                                          }
+                                        },
+                                      ),
                                     ),
-                                  )),
-                                  // ElevatedButton(onPressed: () {}, child: Text('확인'))
+                                  ),
                                 ],
                               ),
-                              const Row(
-                                children: [
-                                  Text('출발시간 : '),
-                                  Expanded(
-                                      child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide()),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide()),
-                                          hintText: '1240'),
-                                    ),
-                                  )),
-                                  Text('도착시간 : '),
-                                  Expanded(
-                                      child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                          focusedBorder: OutlineInputBorder(
-                                              borderSide: BorderSide()),
-                                          enabledBorder: OutlineInputBorder(
-                                              borderSide: BorderSide()),
-                                          hintText: '1240'),
-                                    ),
-                                  )),
-                                ],
+                            ),
+                            const Row(
+                              children: [
+                                Text('출발시간 : '),
+                                Expanded(
+                                    child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide()),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide()),
+                                        hintText: '1240'),
+                                  ),
+                                )),
+                                Text('도착시간 : '),
+                                Expanded(
+                                    child: Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                        focusedBorder: OutlineInputBorder(
+                                            borderSide: BorderSide()),
+                                        enabledBorder: OutlineInputBorder(
+                                            borderSide: BorderSide()),
+                                        hintText: '1240'),
+                                  ),
+                                )),
+                              ],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  viewModel.showFlightsInfo();
+                                },
+                                child: const Text('조회'),
                               ),
-                            ],
-                          ),
+                            )
+                          ],
                         ),
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: ElevatedButton(
-                          onPressed: () {
-                            viewModel.showFlightsInfo();
-                          },
-                          child: const Text('조회'),
-                        ),
-                      )
+
                     ],
                   ),
                   PaginatedDataTable(

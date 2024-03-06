@@ -17,6 +17,9 @@ class FlightsState with _$FlightsState {
     @Default(2024) int selectedYear,
     @Default(1) int selectedMonth,
     @Default(1) int selectedDay,
+    @Default([]) List<String> airportsName,
+    String? selectedDepartureLoc,
+    String? selectedArrivalLoc,
     int? sortColumnIndex,
   }) = _FlightsState;
 
