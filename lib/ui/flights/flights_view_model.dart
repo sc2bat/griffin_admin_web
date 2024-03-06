@@ -13,8 +13,6 @@ class FlightsViewModel extends ChangeNotifier {
   final flightRepository = FlightsRepositoryImpl();
   final airportsRepository = AirportsRepositoryImpl();
 
-  List<FlightsModel> flightsInfo = [];
-
   Future<void> init() async {
     // 오늘 날짜 설정
     initSelectDateOption();
@@ -33,6 +31,9 @@ class FlightsViewModel extends ChangeNotifier {
       String? arrivalTime,
       int? departureLoc,
       int? arrivalLoc}) async {
+    _state = state.copyWith(isLoading: true);
+    notifyListeners();
+
     if (state.selectedDepartureLoc != null) {
       departureLoc = state.airportsInfo
           .firstWhere((e) => e.airportName == state.selectedDepartureLoc)
@@ -43,13 +44,15 @@ class FlightsViewModel extends ChangeNotifier {
           .firstWhere((e) => e.airportName == state.selectedArrivalLoc)
           .airportId;
     }
-    flightsInfo = await flightRepository.getFlightsList(
-        date:
-            '${state.selectedYear}${state.selectedMonth.toString().padLeft(2, '0')}${state.selectedDay.toString().padLeft(2, '0')}',
-        departureTime: departureTime,
-        arrivalTime: arrivalTime,
-        departureLoc: departureLoc,
-        arrivalLoc: arrivalLoc);
+    _state = state.copyWith(
+        flightInfo: await flightRepository.getFlightsList(
+            date:
+                '${state.selectedYear}${state.selectedMonth.toString().padLeft(2, '0')}${state.selectedDay.toString().padLeft(2, '0')}',
+            departureTime: departureTime,
+            arrivalTime: arrivalTime,
+            departureLoc: departureLoc,
+            arrivalLoc: arrivalLoc));
+    _state = state.copyWith(isLoading: false);
     notifyListeners();
   }
 
@@ -115,9 +118,12 @@ class FlightsViewModel extends ChangeNotifier {
   }
 
   void onSort(int columnIndex, bool ascending) {
+    List<FlightsModel> flightsInfo = List.from(state.flightInfo);
     _state = state.copyWith(sortColumnIndex: columnIndex);
     _state = state.copyWith(sort: ascending);
     notifyListeners();
+
+    _state = state.copyWith(flightInfo: flightsInfo);
 
     switch (columnIndex) {
       case 2:

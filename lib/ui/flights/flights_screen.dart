@@ -354,37 +354,43 @@ class _FlightsScreenState extends State<FlightsScreen> {
                       ),
                     ],
                   ),
-                  PaginatedDataTable(
-                    sortColumnIndex: state.sortColumnIndex,
-                    sortAscending: state.sort,
-                    columns: [
-                      const DataColumn(
-                        label: Text('Flight Id'),
-                      ),
-                      const DataColumn(
-                        label: Text('Airplane Id'),
-                      ),
-                      DataColumn(
-                          label: const Text('Flight Date'),
-                          onSort: viewModel.onSort),
-                      DataColumn(
-                          label: const Text('Departure Time'),
-                          onSort: viewModel.onSort),
-                      DataColumn(
-                          label: const Text('Arrival Time'),
-                          onSort: viewModel.onSort),
-                      const DataColumn(
-                        label: Text('Departure Name'),
-                      ),
-                      const DataColumn(
-                        label: Text('Arrival Name'),
-                      ),
-                    ],
-                    source: FlightsDataTableSource(
-                        viewModel.flightsInfo, state.airportsInfo),
-                    rowsPerPage: 10,
-                    horizontalMargin: 60,
-                  ),
+                  state.isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : state.flightInfo.isEmpty
+                          ? const Text('해당 조건에 맞는 항공편이 없습니다.')
+                          : PaginatedDataTable(
+                              sortColumnIndex: state.sortColumnIndex,
+                              sortAscending: state.sort,
+                              columns: [
+                                const DataColumn(
+                                  label: Text('Flight Id'),
+                                ),
+                                const DataColumn(
+                                  label: Text('Airplane Id'),
+                                ),
+                                DataColumn(
+                                    label: const Text('Flight Date'),
+                                    onSort: viewModel.onSort),
+                                DataColumn(
+                                    label: const Text('Departure Time'),
+                                    onSort: viewModel.onSort),
+                                DataColumn(
+                                    label: const Text('Arrival Time'),
+                                    onSort: viewModel.onSort),
+                                const DataColumn(
+                                  label: Text('Departure Name'),
+                                ),
+                                const DataColumn(
+                                  label: Text('Arrival Name'),
+                                ),
+                              ],
+                              source: FlightsDataTableSource(
+                                  state.flightInfo, state.airportsInfo),
+                              rowsPerPage: 10,
+                              horizontalMargin: 60,
+                            ),
                 ],
               ),
             ))
@@ -394,14 +400,14 @@ class _FlightsScreenState extends State<FlightsScreen> {
 }
 
 class FlightsDataTableSource extends DataTableSource {
-  List<FlightsModel> flightsInfo;
+  List<FlightsModel> flightInfo;
   List<AirportsModel> airportsInfo;
 
-  FlightsDataTableSource(this.flightsInfo, this.airportsInfo);
+  FlightsDataTableSource(this.flightInfo, this.airportsInfo);
 
   @override
   DataRow? getRow(int index) {
-    final flight = flightsInfo[index];
+    final flight = flightInfo[index];
     final departureName = airportsInfo
         .firstWhere((airport) => airport.airportId == flight.departureLoc);
     final arrivalName = airportsInfo
@@ -425,7 +431,7 @@ class FlightsDataTableSource extends DataTableSource {
   bool get isRowCountApproximate => false;
 
   @override
-  int get rowCount => flightsInfo.length;
+  int get rowCount => flightInfo.length;
 
   @override
   int get selectedRowCount => 0;
