@@ -10,10 +10,12 @@ part 'airports_state.g.dart';
 class AirportsState with _$AirportsState {
   const factory AirportsState({
     @Default(true) bool sort,
-    int? sortColumnIndex,
+    @Default(0) int sortColumnIndex,
     @Default([]) List<String> filterOptionList,
     @Default('공항명') String selectedFilterOption,
     @Default([]) List<AirportsModel> filteredData,
+    @Default([]) List<AirportsModel> airportInfo,
+    @Default(false) bool isLoading,
   }) = _AirportsState;
 
   factory AirportsState.fromJson(Map<String, Object?> json) =>

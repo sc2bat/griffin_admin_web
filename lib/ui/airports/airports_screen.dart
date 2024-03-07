@@ -121,8 +121,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
                                     ),
                                     suffixIcon: const Icon(Icons.search),
                                   ),
-                                  onChanged: (value) =>
-                                      viewModel.onFilterChanged(value),
+                                  onChanged: viewModel.onFilterChanged,
                                   // onChanged: viewModel.onChanged,
                                 ),
                               ),
@@ -130,37 +129,54 @@ class _AirportsScreenState extends State<AirportsScreen> {
                           ),
                         ),
                       ),
-                      PaginatedDataTable(
-                        sortColumnIndex: state.sortColumnIndex,
-                        sortAscending: state.sort,
-                        columns: [
-                          DataColumn(
-                            label: const Text('airportId'),
-                            onSort: viewModel.onSort,
-                          ),
-                          DataColumn(
-                            label: const Text('airportCode'),
-                            onSort: viewModel.onSort,
-                          ),
-                          DataColumn(
-                            label: const Text('airportName'),
-                            onSort: viewModel.onSort,
-                          ),
-                          const DataColumn(
-                            label: Text('latitude'),
-                          ),
-                          const DataColumn(
-                            label: Text('longitude'),
-                          ),
-                          DataColumn(
-                            label: const Text('country'),
-                            onSort: viewModel.onSort,
-                          )
-                        ],
-                        source: AirportsDataTableSource(viewModel.airportsInfo),
-                        rowsPerPage: 10,
-                        horizontalMargin: 60,
-                      ),
+                      state.isLoading
+                          ? const Center(
+                              child: CircularProgressIndicator(),
+                            )
+                          : PaginatedDataTable(
+                              sortColumnIndex: state.sortColumnIndex,
+                              sortAscending: state.sort,
+                              columns: [
+                                DataColumn(
+                                  label: const Text('airportId'),
+                                  onSort: (columnIndex, ascending) {
+                                    viewModel.onSort(columnIndex, ascending,
+                                        filterController.text);
+                                  },
+                                ),
+                                DataColumn(
+                                  label: const Text('airportCode'),
+                                  onSort: (columnIndex, ascending) {
+                                    viewModel.onSort(columnIndex, ascending,
+                                        filterController.text);
+                                  },
+                                ),
+                                DataColumn(
+                                  label: const Text('airportName'),
+                                  onSort: (columnIndex, ascending) {
+                                    viewModel.onSort(columnIndex, ascending,
+                                        filterController.text);
+                                  },
+                                ),
+                                const DataColumn(
+                                  label: Text('latitude'),
+                                ),
+                                const DataColumn(
+                                  label: Text('longitude'),
+                                ),
+                                DataColumn(
+                                  label: const Text('country'),
+                                  onSort: (columnIndex, ascending) {
+                                    viewModel.onSort(columnIndex, ascending,
+                                        filterController.text);
+                                  },
+                                )
+                              ],
+                              source:
+                                  AirportsDataTableSource(state.filteredData),
+                              rowsPerPage: 10,
+                              horizontalMargin: 60,
+                            ),
                     ],
                   ),
                 ),

@@ -6,6 +6,9 @@ import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_screen.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_view_model.dart';
 import 'package:admin_web_app/ui/dashboard/dashboard_screen.dart';
+import 'package:admin_web_app/ui/airports/airports_view_model.dart';
+import 'package:admin_web_app/ui/flights/detail/flight_detail_screen.dart';
+import 'package:admin_web_app/ui/flights/detail/flight_detail_view_model.dart';
 import 'package:admin_web_app/ui/flights/flights_screen.dart';
 import 'package:admin_web_app/ui/flights/flights_view_model.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
@@ -56,9 +59,14 @@ final router = GoRouter(
         GoRoute(
           name: 'flightDetail',
           path: 'flightDetail',
-          builder: (_, __) => const MyHomePage(
-            title: 'flightDetail',
-          ),
+          builder: (_, state) {
+            final flightDetailMap = state.extra! as Map<String, dynamic>;
+            return ChangeNotifierProvider(
+              create: (_) => FlightDetailViewModel(),
+              child:
+                  FlightDetailScreen(flightsModel: flightDetailMap['flightsModel']),
+            );
+          },
           routes: const [],
         ),
       ],

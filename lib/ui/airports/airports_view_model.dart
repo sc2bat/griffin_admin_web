@@ -8,21 +8,27 @@ class AirportsViewModel extends ChangeNotifier {
 
   AirportsState get state => _state;
 
-  List<AirportsModel> airportsInfo = [];
-
   final repository = AirportsRepositoryImpl();
 
   Future<void> showAirportsInfo() async {
-    airportsInfo = await repository.getAirportsList();
-    _state = state.copyWith(filteredData: airportsInfo);
+    _state = state.copyWith(isLoading: true);
+    notifyListeners();
+
+    final List<AirportsModel> airportList = await repository.getAirportsList();
+    _state = state.copyWith(
+      airportInfo: airportList,
+      isLoading: false,
+    );
+    onSort(state.sortColumnIndex, state.sort, '');
     notifyListeners();
   }
 
   void onChanged(String value) {
-    airportsInfo = state.filteredData
-        .where((element) =>
-            element.airportName.toLowerCase().contains(value.toLowerCase()))
-        .toList();
+    _state = state.copyWith(
+        airportInfo: state.filteredData
+            .where((element) =>
+                element.airportName.toLowerCase().contains(value.toLowerCase()))
+            .toList());
     notifyListeners();
   }
 
@@ -44,21 +50,22 @@ class AirportsViewModel extends ChangeNotifier {
   void onFilterChanged(String value) {
     int selectedFilterOption =
         state.filterOptionList.indexOf(state.selectedFilterOption);
+    List<AirportsModel> airportsInfo = [];
     switch (selectedFilterOption) {
       case 0:
-        airportsInfo = state.filteredData
+        airportsInfo = state.airportInfo
             .where((element) =>
                 element.airportCode.toLowerCase().contains(value.toLowerCase()))
             .toList();
         break;
       case 1:
-        airportsInfo = state.filteredData
+        airportsInfo = state.airportInfo
             .where((element) =>
                 element.airportName.toLowerCase().contains(value.toLowerCase()))
             .toList();
         break;
       case 2:
-        airportsInfo = state.filteredData
+        airportsInfo = state.airportInfo
             .where((element) =>
                 element.country.toLowerCase().contains(value.toLowerCase()))
             .toList();
@@ -66,10 +73,17 @@ class AirportsViewModel extends ChangeNotifier {
       default:
         break;
     }
+    _state = state.copyWith(filteredData: airportsInfo);
     notifyListeners();
   }
 
-  void onSort(int columnIndex, bool ascending) {
+  void onSort(int columnIndex, bool ascending, String keyword) {
+    List<AirportsModel> airportsInfo = [];
+    if (keyword.isNotEmpty) {
+      airportsInfo = List.from(state.filteredData);
+    } else {
+      airportsInfo = List.from(state.airportInfo);
+    }
     _state = state.copyWith(sortColumnIndex: columnIndex);
     _state = state.copyWith(sort: ascending);
     notifyListeners();
@@ -114,5 +128,8 @@ class AirportsViewModel extends ChangeNotifier {
       default:
         break;
     }
+
+    _state = state.copyWith(filteredData: airportsInfo);
+    notifyListeners();
   }
 }

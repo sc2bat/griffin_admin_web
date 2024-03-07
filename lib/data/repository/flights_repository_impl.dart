@@ -5,26 +5,16 @@ import 'package:admin_web_app/domain/repository/flights_repository.dart';
 import 'package:admin_web_app/env/env.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
 
-// class FlightsRepositoryImpl implements FlightsRepository {
-//   @override
-//   Future<List<FlightsModel>> getFlightsList() async {
-//     const url = '${Env.adminHostUrl}/flights/?';
-//     final response = await fetchHttp(url);
-//     final List<dynamic> json = jsonDecode(response.body);
-//     return json.map((e) => FlightsModel.fromJson(e)).toList();
-//   }
-// }
-
 class FlightsRepositoryImpl implements FlightsRepository {
   @override
   Future<List<FlightsModel>> getFlightsList(
       {String? date,
-        String? departureTime,
-        String? arrivalTime,
-        int? departureLoc,
-        int? arrivalLoc}) async {
+      String? departureTime,
+      String? arrivalTime,
+      int? departureLoc,
+      int? arrivalLoc}) async {
     Map<String, dynamic> jsonData = {
-      'departure_date': date,
+      'flight_date': date,
       'departure_time': departureTime,
       'arrival_time': arrivalTime,
       'departure_loc': departureLoc,
@@ -41,4 +31,19 @@ class FlightsRepositoryImpl implements FlightsRepository {
     final List<dynamic> json = jsonDecode(response.body);
     return json.map((e) => FlightsModel.fromJson(e)).toList();
   }
+
+  // @override
+  // Future<FlightsModel> getOneFlight(int flightId) async {
+  //   try {
+  //     final response = await fetchHttp(
+  //         '${Env.griffinFlightUrl}/flights/?flight_Id=$flightId');
+  //
+  //     final jsonData = jsonDecode(response.body);
+  //
+  //     return jsonData.map((e) => FlightsModel.fromJson(e));
+  //   } catch (e) {
+  //     logger.info('FlightsRepository getFlightsList => $e');
+  //     throw Exception(e);
+  //   }
+  // }
 }
