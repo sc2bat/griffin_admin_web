@@ -1,7 +1,10 @@
 import 'package:admin_web_app/ui/airports/airports_view_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
+import 'package:admin_web_app/utils/simple_logger.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 import '../../data/model/airports/airports_model.dart';
 
 class AirportsScreen extends StatefulWidget {
@@ -25,6 +28,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
     Future.microtask(() {
       final AirportsViewModel airportsViewModel =
           context.read<AirportsViewModel>();
+      airportsViewModel.filterOptionInit();
       airportsViewModel.showAirportsInfo();
     });
     super.initState();
@@ -36,29 +40,94 @@ class _AirportsScreenState extends State<AirportsScreen> {
     final state = viewModel.state;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('airports'),
+        title: const Center(
+          child: Text('GRIFFIN AIRPORT WEB PAGE'),
+        ),
       ),
-      body: Row(
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: CommonMenuListWidget(context: context),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(32),
-                    child: TextField(
-                      controller: filterController,
-                      decoration: InputDecoration(
-                        hintText: 'airport name',
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
+      body: Container(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: CommonMenuListWidget(context: context),
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Padding(
+                          padding: const EdgeInsets.all(32),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              DropdownButtonHideUnderline(
+                                child: DropdownButton2<String>(
+                                  isExpanded: true,
+                                  hint: Text(
+                                    'Select Item',
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Theme.of(context).hintColor,
+                                    ),
+                                  ),
+                                  items: state.filterOptionList
+                                      .map((String item) =>
+                                          DropdownMenuItem<String>(
+                                            value: item,
+                                            child: Text(
+                                              item,
+                                              style: const TextStyle(
+                                                fontSize: 14,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
+                                  value: state.selectedFilterOption,
+                                  onChanged: (String? value) {
+                                    if (value != null) {
+                                      viewModel.onFilterOption(value);
+                                      filterController.text = '';
+                                    } else {
+                                      logger.info('select error');
+                                    }
+                                  },
+                                  buttonStyleData: const ButtonStyleData(
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 16),
+                                    height: 40,
+                                    width: 140,
+                                  ),
+                                  menuItemStyleData: const MenuItemStyleData(
+                                    height: 40,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.4,
+                                child: TextField(
+                                  controller: filterController,
+                                  decoration: InputDecoration(
+                                    hintText: 'Please enter a search keyword',
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(10),
+                                    ),
+                                    suffixIcon: const Icon(Icons.search),
+                                  ),
+                                  onChanged: (value) =>
+                                      viewModel.onFilterChanged(value),
+                                  // onChanged: viewModel.onChanged,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                         suffixIcon: const Icon(Icons.search),
                       ),
@@ -102,9 +171,9 @@ class _AirportsScreenState extends State<AirportsScreen> {
                         ),
                 ],
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

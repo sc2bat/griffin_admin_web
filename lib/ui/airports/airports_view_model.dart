@@ -29,6 +29,49 @@ class AirportsViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void filterOptionInit() {
+    List<String> filterOptionList = ['공항코드', '공항명', '국가코드'];
+    _state = state.copyWith(
+        filterOptionList: filterOptionList,
+        selectedFilterOption: filterOptionList[1]);
+
+    notifyListeners();
+  }
+
+  void onFilterOption(String value) {
+    _state = state.copyWith(selectedFilterOption: value);
+    notifyListeners();
+    onFilterChanged('');
+  }
+
+  void onFilterChanged(String value) {
+    int selectedFilterOption =
+        state.filterOptionList.indexOf(state.selectedFilterOption);
+    switch (selectedFilterOption) {
+      case 0:
+        airportsInfo = state.filteredData
+            .where((element) =>
+                element.airportCode.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+        break;
+      case 1:
+        airportsInfo = state.filteredData
+            .where((element) =>
+                element.airportName.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+        break;
+      case 2:
+        airportsInfo = state.filteredData
+            .where((element) =>
+                element.country.toLowerCase().contains(value.toLowerCase()))
+            .toList();
+        break;
+      default:
+        break;
+    }
+    notifyListeners();
+  }
+
   void onSort(int columnIndex, bool ascending) {
     List<AirportsModel> airportsInfo = List.from(state.airportInfo);
     _state = state.copyWith(sortColumnIndex: columnIndex);
