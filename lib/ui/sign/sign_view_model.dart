@@ -21,8 +21,8 @@ class SignViewModel with ChangeNotifier {
   SignState _signState = const SignState();
   SignState get signState => _signState;
 
-  final StreamController<SignResult> _signResult = StreamController();
-  Stream<SignResult> get signResult => _signResult.stream;
+  final StreamController<SignStatus> _signResult = StreamController();
+  Stream<SignStatus> get signResult => _signResult.stream;
 
   void _updateLoading({required bool isLoading}) {
     _signState = signState.copyWith(isLoading: isLoading);
@@ -36,10 +36,10 @@ class SignViewModel with ChangeNotifier {
     try {
       // ignore: unused_local_variable
       final AccountModel accountModel = await _sessionRepository.getSession();
-      _signResult.add(SignResult.isSignedIn);
+      _signResult.add(SignStatus.isSignedIn);
     } catch (e) {
       if (e.toString() == 'getSession none') {
-        _signResult.add(SignResult.isNotSignedIn);
+        _signResult.add(SignStatus.isNotSignedIn);
       } else {
         logger.info(e);
       }
@@ -55,12 +55,12 @@ class SignViewModel with ChangeNotifier {
       final signInResult = await _signRepository.signIn(userName, password);
       await _sessionRepository
           .storeSession(UserAccountMapper.toDTO(signInResult));
-      _signResult.add(SignResult.signSuccess);
+      _signResult.add(SignStatus.signSuccess);
     } catch (e) {
       logger.info(e);
-      _signResult.add(SignResult.signFail);
-    }
+      _signResult.add(SignStatus.signFail);
 
-    _updateLoading(isLoading: false);
+      _updateLoading(isLoading: false);
+    }
   }
 }

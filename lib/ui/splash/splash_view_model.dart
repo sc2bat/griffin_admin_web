@@ -16,22 +16,22 @@ class SplashViewModel with ChangeNotifier {
   final StreamController<SignStatus> _signStatus = StreamController();
   Stream<SignStatus> get signResult => _signStatus.stream;
 
-  SplashState _splashnState = const SplashState();
-  SplashState get splashState => _splashnState;
+  SplashState _splashState = const SplashState();
+  SplashState get splashState => _splashState;
 
   Future<void> init() async {
-    _splashnState = splashState.copyWith(isLoading: true);
+    _splashState = splashState.copyWith(isLoading: true);
     notifyListeners();
     try {
       final AccountModel accountModel = await _sessionRepository.getSession();
-      _signStatus.add(SignStatus.signIn);
-      _splashnState =
+      _signStatus.add(SignStatus.isSignedIn);
+      _splashState =
           splashState.copyWith(isLoading: false, accountModel: accountModel);
       notifyListeners();
     } catch (e) {
       await _sessionRepository.deleteSession();
       logger.info(e);
-      _signStatus.add(SignStatus.signOut);
+      _signStatus.add(SignStatus.isNotSignedIn);
     }
   }
 }

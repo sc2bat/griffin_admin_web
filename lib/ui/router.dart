@@ -6,6 +6,7 @@ import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_screen.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_view_model.dart';
 import 'package:admin_web_app/ui/dashboard/dashboard_screen.dart';
+import 'package:admin_web_app/ui/dashboard/dashboard_view_model.dart';
 import 'package:admin_web_app/ui/flights/detail/flight_detail_screen.dart';
 import 'package:admin_web_app/ui/flights/detail/flight_detail_view_model.dart';
 import 'package:admin_web_app/ui/flights/flights_screen.dart';
@@ -21,17 +22,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 final router = GoRouter(
-  initialLocation: '/sign',
+  initialLocation: '/splash',
   routes: [
-    GoRoute(
-      name: 'sign',
-      path: '/sign',
-      builder: (_, __) => ChangeNotifierProvider(
-        create: (_) => getIt<SignViewModel>(),
-        child: const SignScreen(),
-      ),
-      routes: const [],
-    ),
     GoRoute(
       name: 'splash',
       path: '/splash',
@@ -42,9 +34,21 @@ final router = GoRouter(
       routes: const [],
     ),
     GoRoute(
+      name: 'sign',
+      path: '/sign',
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<SignViewModel>(),
+        child: const SignScreen(),
+      ),
+      routes: const [],
+    ),
+    GoRoute(
       name: 'dashboard',
       path: '/dashboard',
-      builder: (_, __) => const DashboardScreen(),
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<DashboardViewModel>(),
+        child: const DashboardScreen(),
+      ),
       routes: const [],
     ),
     GoRoute(

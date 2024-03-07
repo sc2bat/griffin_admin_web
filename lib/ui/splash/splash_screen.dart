@@ -22,9 +22,11 @@ class _SplashScreenState extends State<SplashScreen> {
       splashViewModel.init();
       _stremSubscription = splashViewModel.signResult.listen((event) {
         switch (event) {
-          case SignStatus.signIn:
+          case SignStatus.signSuccess:
+          case SignStatus.signFail:
+          case SignStatus.isSignedIn:
             context.go('/dashboard');
-          case SignStatus.signOut:
+          case SignStatus.isNotSignedIn:
             context.go('/sign');
         }
       });
