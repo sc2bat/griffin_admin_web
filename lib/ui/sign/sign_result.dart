@@ -1,0 +1,4 @@
+enum SignResult {
+  signSuccess,
+  signFail,
+}

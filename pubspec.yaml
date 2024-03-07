@@ -47,6 +47,7 @@ dependencies:
   fl_chart: ^0.66.2
   dropdown_button2: ^2.3.9
   email_validator: ^2.1.17
+  shared_preferences: ^2.2.2
 
 dev_dependencies:
   flutter_test:
