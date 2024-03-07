@@ -28,9 +28,9 @@ class _SignScreenState extends State<SignScreen> {
       signViewModel.init();
       _subscription = signViewModel.signResult.listen((event) {
         switch (event) {
-          case SignResult.signSuccess:
+          case SignStatus.signSuccess:
             context.go('/splash');
-          case SignResult.signFail:
+          case SignStatus.signFail:
             showCustomDialog(
               context,
               cancelable: false,
@@ -38,9 +38,9 @@ class _SignScreenState extends State<SignScreen> {
               title: '로그인 오류',
               content: '아이디 비밀번호를 재확인해주세요',
             );
-          case SignResult.isSignedIn:
+          case SignStatus.isSignedIn:
             context.go('/dashboard');
-          case SignResult.isNotSignedIn:
+          case SignStatus.isNotSignedIn:
         }
       });
     });
@@ -72,66 +72,67 @@ class _SignScreenState extends State<SignScreen> {
         ),
       ),
       body: Center(
-        child: Container(
-          constraints: BoxConstraints(
-            minWidth: MediaQuery.of(context).size.width * 0.3,
-            maxWidth: MediaQuery.of(context).size.width * 0.5,
-          ),
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.4,
+          height: MediaQuery.of(context).size.height * 0.6,
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  TextFormField(
-                    controller: _userNameController,
-                    keyboardType: TextInputType.name,
-                    decoration: const InputDecoration(
-                      labelText: 'UserName',
-                    ),
-                    validator: (value) {
-                      if (value != null) {
-                        if (value.isEmpty) {
-                          return 'Please enter your user name';
+            child: SingleChildScrollView(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextFormField(
+                      controller: _userNameController,
+                      keyboardType: TextInputType.name,
+                      decoration: const InputDecoration(
+                        labelText: 'UserName',
+                      ),
+                      validator: (value) {
+                        if (value != null) {
+                          if (value.isEmpty) {
+                            return 'Please enter your user name';
+                          }
                         }
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 12.0),
-                  TextFormField(
-                    controller: _passwordController,
-                    obscureText: true,
-                    decoration: const InputDecoration(
-                      labelText: 'Password',
+                        return null;
+                      },
                     ),
-                    validator: (value) {
-                      if (value != null && value.isEmpty) {
-                        return 'Please enter your password';
-                      }
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16.0),
-                  singState.isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState != null &&
-                                _formKey.currentState!.validate()) {
-                              String userName = _userNameController.text;
-                              String password = _passwordController.text;
-                              signViewModel.signIn(
-                                  userName: userName, password: password);
-                            }
-                          },
-                          child: const Text('Admin SignIn'),
-                        ),
-                ],
+                    const SizedBox(height: 12.0),
+                    TextFormField(
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: const InputDecoration(
+                        labelText: 'Password',
+                      ),
+                      validator: (value) {
+                        if (value != null && value.isEmpty) {
+                          return 'Please enter your password';
+                        }
+                        return null;
+                      },
+                    ),
+                    const SizedBox(height: 16.0),
+                    singState.isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : ElevatedButton(
+                            onPressed: () {
+                              if (_formKey.currentState != null &&
+                                  _formKey.currentState!.validate()) {
+                                String userName = _userNameController.text;
+                                String password = _passwordController.text;
+                                signViewModel.signIn(
+                                    userName: userName, password: password);
+                              }
+                            },
+                            child: const Text('Admin SignIn'),
+                          ),
+                  ],
+                ),
               ),
             ),
           ),

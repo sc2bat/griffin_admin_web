@@ -10,6 +10,7 @@ import 'package:admin_web_app/domain/repository/sign_repository.dart';
 import 'package:admin_web_app/domain/repository/user_repository.dart';
 import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_view_model.dart';
+import 'package:admin_web_app/ui/dashboard/dashboard_view_model.dart';
 import 'package:admin_web_app/ui/sign/sign_view_model.dart';
 import 'package:admin_web_app/ui/splash/splash_view_model.dart';
 import 'package:admin_web_app/ui/user/user_view_model.dart';
@@ -44,6 +45,12 @@ void diSetup() {
     )
     ..registerFactory<SplashViewModel>(
       () => SplashViewModel(
+        sessionRepository: getIt<SessionRepository>(),
+      ),
+    )
+    ..registerFactory<DashboardViewModel>(
+      () => DashboardViewModel(
+        signRepository: getIt<SignRepository>(),
         sessionRepository: getIt<SessionRepository>(),
       ),
     )
