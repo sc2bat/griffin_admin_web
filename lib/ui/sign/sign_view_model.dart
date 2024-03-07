@@ -34,6 +34,7 @@ class SignViewModel with ChangeNotifier {
     notifyListeners();
 
     try {
+      // ignore: unused_local_variable
       final AccountModel accountModel = await _sessionRepository.getSession();
       _signResult.add(SignResult.isSignedIn);
     } catch (e) {
