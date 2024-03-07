@@ -5,6 +5,7 @@ import 'package:admin_web_app/ui/flights/flights_view_model.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 class FlightsScreen extends StatefulWidget {
@@ -384,10 +385,12 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                 ),
                                 const DataColumn(
                                   label: Text('Arrival Name'),
+                                ),const DataColumn(
+                                  label: Text('Detail'),
                                 ),
                               ],
                               source: FlightsDataTableSource(
-                                  state.flightInfo, state.airportsInfo),
+                                  state.flightInfo, state.airportsInfo,context),
                               rowsPerPage: 10,
                               horizontalMargin: 60,
                             ),
@@ -400,10 +403,11 @@ class _FlightsScreenState extends State<FlightsScreen> {
 }
 
 class FlightsDataTableSource extends DataTableSource {
+  final BuildContext context;
   List<FlightsModel> flightInfo;
   List<AirportsModel> airportsInfo;
 
-  FlightsDataTableSource(this.flightInfo, this.airportsInfo);
+  FlightsDataTableSource(this.flightInfo, this.airportsInfo, this.context);
 
   @override
   DataRow? getRow(int index) {
@@ -424,6 +428,7 @@ class FlightsDataTableSource extends DataTableSource {
           '${flight.arrivalTime.substring(0, 2)}:${flight.arrivalTime.substring(2)}')),
       DataCell(Text(departureName.airportName)),
       DataCell(Text(arrivalName.airportName)),
+      DataCell(IconButton(onPressed: (){context.push('/flights/flightDetail',extra: {'flightsModel': flight});}, icon: const Icon(Icons.remove_red_eye_rounded))),
     ]);
   }
 
