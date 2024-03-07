@@ -9,6 +9,7 @@ import 'package:admin_web_app/ui/flights/flights_screen.dart';
 import 'package:admin_web_app/ui/flights/flights_view_model.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
 import 'package:admin_web_app/ui/sign/sign_screen.dart';
+import 'package:admin_web_app/ui/sign/sign_view_model.dart';
 import 'package:admin_web_app/ui/splash/index_screen.dart';
 import 'package:admin_web_app/ui/splash/splash_screen.dart';
 import 'package:admin_web_app/ui/user/user_screen.dart';
@@ -17,12 +18,15 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 final router = GoRouter(
-  initialLocation: '/dashboard',
+  initialLocation: '/sign',
   routes: [
     GoRoute(
       name: 'sign',
       path: '/sign',
-      builder: (_, __) => const SignScreen(),
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<SignViewModel>(),
+        child: const SignScreen(),
+      ),
       routes: const [],
     ),
     GoRoute(
