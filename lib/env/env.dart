@@ -23,4 +23,14 @@ abstract class Env {
   // MOCK_BOOK_URL
   @EnviedField()
   static const String mockBookUrl = _Env.mockBookUrl;
+
+  // SAMPLE_ADMIN_ACCOUNT_INFO
+  @EnviedField()
+  static const String sampleAccountUserid = _Env.sampleAccountUserid;
+  @EnviedField()
+  static const String sampleAccountUsername = _Env.sampleAccountUsername;
+  @EnviedField()
+  static const String sampleAccountEmail = _Env.sampleAccountEmail;
+  @EnviedField()
+  static const String sampleAccountPassword = _Env.sampleAccountPassword;
 }

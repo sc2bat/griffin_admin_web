@@ -5,6 +5,7 @@ import 'package:admin_web_app/ui/book/book_screen.dart';
 import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_screen.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_view_model.dart';
+import 'package:admin_web_app/ui/dashboard/dashboard_screen.dart';
 import 'package:admin_web_app/ui/airports/airports_view_model.dart';
 import 'package:admin_web_app/ui/flights/detail/flight_detail_screen.dart';
 import 'package:admin_web_app/ui/flights/detail/flight_detail_view_model.dart';
@@ -12,32 +13,39 @@ import 'package:admin_web_app/ui/flights/flights_screen.dart';
 import 'package:admin_web_app/ui/flights/flights_view_model.dart';
 import 'package:admin_web_app/ui/sample/my_home_page.dart';
 import 'package:admin_web_app/ui/sign/sign_screen.dart';
-import 'package:admin_web_app/ui/splash/index_screen.dart';
+import 'package:admin_web_app/ui/sign/sign_view_model.dart';
 import 'package:admin_web_app/ui/splash/splash_screen.dart';
+import 'package:admin_web_app/ui/splash/splash_view_model.dart';
 import 'package:admin_web_app/ui/user/user_screen.dart';
 import 'package:admin_web_app/ui/user/user_view_model.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 final router = GoRouter(
-  initialLocation: '/dashboard',
+  initialLocation: '/sign',
   routes: [
     GoRoute(
       name: 'sign',
       path: '/sign',
-      builder: (_, __) => const SignScreen(),
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<SignViewModel>(),
+        child: const SignScreen(),
+      ),
       routes: const [],
     ),
     GoRoute(
       name: 'splash',
       path: '/splash',
-      builder: (_, __) => const SplashScreen(),
+      builder: (_, __) => ChangeNotifierProvider(
+        create: (_) => getIt<SplashViewModel>(),
+        child: const SplashScreen(),
+      ),
       routes: const [],
     ),
     GoRoute(
       name: 'dashboard',
       path: '/dashboard',
-      builder: (_, __) => const IndexScreen(),
+      builder: (_, __) => const DashboardScreen(),
       routes: const [],
     ),
     GoRoute(
