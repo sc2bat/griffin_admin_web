@@ -123,8 +123,6 @@ class FlightsViewModel extends ChangeNotifier {
     _state = state.copyWith(sort: ascending);
     notifyListeners();
 
-    _state = state.copyWith(flightInfo: flightsInfo);
-
     switch (columnIndex) {
       case 2:
         {
@@ -158,6 +156,9 @@ class FlightsViewModel extends ChangeNotifier {
       default:
         break;
     }
+
+    _state = state.copyWith(flightInfo: flightsInfo);
+    notifyListeners();
   }
 
   void onChangeDepartureLoc(String? value) {

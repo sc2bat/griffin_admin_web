@@ -14,9 +14,12 @@ class AirportsViewModel extends ChangeNotifier {
     _state = state.copyWith(isLoading: true);
     notifyListeners();
 
-    _state = state.copyWith(airportInfo: await repository.getAirportsList());
-    _state = state.copyWith(filteredData: state.airportInfo);
-    _state = state.copyWith(isLoading: false);
+    final List<AirportsModel> airportList = await repository.getAirportsList();
+    _state = state.copyWith(
+      airportInfo: airportList,
+      isLoading: false,
+    );
+    onSort(state.sortColumnIndex, state.sort, '');
     notifyListeners();
   }
 
@@ -47,21 +50,22 @@ class AirportsViewModel extends ChangeNotifier {
   void onFilterChanged(String value) {
     int selectedFilterOption =
         state.filterOptionList.indexOf(state.selectedFilterOption);
+    List<AirportsModel> airportsInfo = [];
     switch (selectedFilterOption) {
       case 0:
-        airportsInfo = state.filteredData
+        airportsInfo = state.airportInfo
             .where((element) =>
                 element.airportCode.toLowerCase().contains(value.toLowerCase()))
             .toList();
         break;
       case 1:
-        airportsInfo = state.filteredData
+        airportsInfo = state.airportInfo
             .where((element) =>
                 element.airportName.toLowerCase().contains(value.toLowerCase()))
             .toList();
         break;
       case 2:
-        airportsInfo = state.filteredData
+        airportsInfo = state.airportInfo
             .where((element) =>
                 element.country.toLowerCase().contains(value.toLowerCase()))
             .toList();
@@ -69,16 +73,20 @@ class AirportsViewModel extends ChangeNotifier {
       default:
         break;
     }
+    _state = state.copyWith(filteredData: airportsInfo);
     notifyListeners();
   }
 
-  void onSort(int columnIndex, bool ascending) {
-    List<AirportsModel> airportsInfo = List.from(state.airportInfo);
+  void onSort(int columnIndex, bool ascending, String keyword) {
+    List<AirportsModel> airportsInfo = [];
+    if (keyword.isNotEmpty) {
+      airportsInfo = List.from(state.filteredData);
+    } else {
+      airportsInfo = List.from(state.airportInfo);
+    }
     _state = state.copyWith(sortColumnIndex: columnIndex);
     _state = state.copyWith(sort: ascending);
     notifyListeners();
-
-    _state = state.copyWith(airportInfo: airportsInfo);
 
     switch (columnIndex) {
       case 0:
@@ -120,5 +128,8 @@ class AirportsViewModel extends ChangeNotifier {
       default:
         break;
     }
+
+    _state = state.copyWith(filteredData: airportsInfo);
+    notifyListeners();
   }
 }
