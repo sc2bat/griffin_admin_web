@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:admin_web_app/env/env.dart';
 import 'package:admin_web_app/ui/common/common.dart';
-import 'package:admin_web_app/ui/sign/sign_result.dart';
+import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/ui/sign/sign_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -25,6 +25,7 @@ class _SignScreenState extends State<SignScreen> {
   void initState() {
     Future.microtask(() {
       final signViewModel = context.read<SignViewModel>();
+      signViewModel.init();
       _subscription = signViewModel.signResult.listen((event) {
         switch (event) {
           case SignResult.signSuccess:
@@ -37,6 +38,9 @@ class _SignScreenState extends State<SignScreen> {
               title: '로그인 오류',
               content: '아이디 비밀번호를 재확인해주세요',
             );
+          case SignResult.isSignedIn:
+            context.go('/dashboard');
+          case SignResult.isNotSignedIn:
         }
       });
     });

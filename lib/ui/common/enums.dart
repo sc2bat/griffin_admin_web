@@ -1,3 +1,15 @@
+enum SignResult {
+  signSuccess,
+  signFail,
+  isSignedIn,
+  isNotSignedIn,
+}
+
+enum SignStatus {
+  signIn,
+  signOut,
+}
+
 enum BookStatus {
   inProgress,
   completed,
