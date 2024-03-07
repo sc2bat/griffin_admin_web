@@ -14,6 +14,9 @@ class AirportsState with _$AirportsState {
     @Default([]) List<String> filterOptionList,
     @Default('공항명') String selectedFilterOption,
     @Default([]) List<AirportsModel> filteredData,
+    @Default([]) List<AirportsModel> airportInfo,
+    @Default(false) bool isLoading,
+    int? sortColumnIndex,
   }) = _AirportsState;
 
   factory AirportsState.fromJson(Map<String, Object?> json) =>

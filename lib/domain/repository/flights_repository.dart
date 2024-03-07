@@ -1,7 +1,6 @@
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
 
 abstract class FlightsRepository {
-  // Future<List<FlightsModel>> getFlightsList();
   Future<List<FlightsModel>> getFlightsList(
       {String? date,
       String? departureTime,
@@ -9,4 +8,5 @@ abstract class FlightsRepository {
       int? departureLoc,
       int? arrivalLoc});
 
+  // Future<FlightsModel> getOneFlight(int flightId);
 }
