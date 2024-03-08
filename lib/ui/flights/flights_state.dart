@@ -13,7 +13,7 @@ class FlightsState with _$FlightsState {
     @Default([]) List<AirportsModel> airportsInfo,
     @Default([]) List<FlightsModel> flightInfo,
     @Default(true) bool sort,
-    @Default(false) bool isLoading,
+    @Default(true) bool isLoading,
     @Default([]) List<int> flightOptionYear,
     @Default([]) List<int> flightOptionMonth,
     @Default([]) List<int> flightOptionDay,

@@ -67,7 +67,10 @@ final router = GoRouter(
             return ChangeNotifierProvider(
               create: (_) => FlightDetailViewModel(),
               child: FlightDetailScreen(
-                  flightsModel: flightDetailMap['flightsModel']),
+                flightsModel: flightDetailMap['flightsModel'],
+                departureAirportModel: flightDetailMap['departureAirportModel'],
+                arrivalAirportModel: flightDetailMap['arrivalAirportModel'],
+              ),
             );
           },
           routes: const [],
