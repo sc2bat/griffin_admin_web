@@ -97,10 +97,12 @@ void diSetup() {
       () => FlightsViewModel(
         flightRepository: getIt<FlightsRepository>(),
         airportsRepository: getIt<AirportsRepository>(),
+        signRepository: getIt<SignRepository>(),
+        sessionRepository: getIt<SessionRepository>(),
       ),
     )
     ..registerFactory<FlightDetailViewModel>(
-          () => FlightDetailViewModel(
+      () => FlightDetailViewModel(
         airplanesRepository: getIt<AirplanesRepository>(),
       ),
     );

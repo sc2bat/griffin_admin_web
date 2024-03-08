@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
+import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/ui/flights/flights_view_model.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -18,13 +21,9 @@ class FlightsScreen extends StatefulWidget {
 class _FlightsScreenState extends State<FlightsScreen> {
   final departureLocFilter = TextEditingController();
   final arrivalLocFilter = TextEditingController();
+  StreamSubscription? _streamSubscription;
 
-  @override
-  void dispose() {
-    departureLocFilter.dispose();
-    arrivalLocFilter.dispose();
-    super.dispose();
-  }
+
 
   @override
   void initState() {
@@ -32,8 +31,26 @@ class _FlightsScreenState extends State<FlightsScreen> {
       final FlightsViewModel flightsViewModel =
           context.read<FlightsViewModel>();
       flightsViewModel.init();
+      _streamSubscription = flightsViewModel.signResult.listen((event) {
+        switch (event) {
+          case SignStatus.signSuccess:
+          case SignStatus.signFail:
+          case SignStatus.isSignedIn:
+            context.go('/flights');
+          case SignStatus.isNotSignedIn:
+            context.go('/sign');
+        }
+      });
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    departureLocFilter.dispose();
+    arrivalLocFilter.dispose();
+    _streamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -43,6 +60,18 @@ class _FlightsScreenState extends State<FlightsScreen> {
     return Scaffold(
         appBar: AppBar(
           title: const Text('flights'),
+          actions: [
+            Text(state.accountModel?.email ?? ''),
+            const SizedBox(
+              width: 8.0,
+            ),
+            ElevatedButton(
+              onPressed: () {
+                viewModel.signOut();
+              },
+              child: const Text('SignOut'),
+            ),
+          ],
         ),
         body: Row(
           children: [
