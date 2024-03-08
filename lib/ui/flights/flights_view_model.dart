@@ -37,11 +37,11 @@ class FlightsViewModel extends ChangeNotifier {
   Stream<SignStatus> get signResult => _signStatus.stream;
 
   Future<void> init() async {
-    _updateLoading(true);
+    // _updateLoading(true);
 
     await checkSession();
 
-    _updateLoading(false);
+    // _updateLoading(false);
     // 오늘 날짜 설정
     initSelectDateOption();
     // 날짜 선택 옵션
@@ -211,10 +211,10 @@ class FlightsViewModel extends ChangeNotifier {
     }
   }
 
-  void _updateLoading(bool isLoading) {
-    _state = state.copyWith(isLoading: isLoading);
-    notifyListeners();
-  }
+  // void _updateLoading(bool isLoading) {
+  //   _state = state.copyWith(isLoading: isLoading);
+  //   notifyListeners();
+  // }
 
   Future<void> signOut() async {
     try {

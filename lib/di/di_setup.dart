@@ -91,6 +91,8 @@ void diSetup() {
     ..registerFactory<AirportsViewModel>(
       () => AirportsViewModel(
         airportsRepository: getIt<AirportsRepository>(),
+        signRepository: getIt<SignRepository>(),
+        sessionRepository: getIt<SessionRepository>(),
       ),
     )
     ..registerFactory<FlightsViewModel>(
