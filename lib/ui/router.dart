@@ -55,7 +55,7 @@ final router = GoRouter(
       name: 'flights',
       path: '/flights',
       builder: (_, __) => ChangeNotifierProvider(
-        create: (_) => FlightsViewModel(),
+        create: (_) => getIt<FlightsViewModel>(),
         child: const FlightsScreen(),
       ),
       routes: [
@@ -65,7 +65,7 @@ final router = GoRouter(
           builder: (_, state) {
             final flightDetailMap = state.extra! as Map<String, dynamic>;
             return ChangeNotifierProvider(
-              create: (_) => FlightDetailViewModel(),
+              create: (_) => getIt<FlightDetailViewModel>(),
               child: FlightDetailScreen(
                 flightsModel: flightDetailMap['flightsModel'],
                 departureAirportModel: flightDetailMap['departureAirportModel'],
@@ -82,7 +82,7 @@ final router = GoRouter(
       path: '/airports',
       builder: (_, __) {
         return ChangeNotifierProvider(
-          create: (_) => AirportsViewModel(),
+          create: (_) => getIt<AirportsViewModel>(),
           child: const AirportsScreen(),
         );
       },

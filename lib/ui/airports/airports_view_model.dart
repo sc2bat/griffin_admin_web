@@ -1,20 +1,25 @@
 import 'package:admin_web_app/data/model/airports/airports_model.dart';
-import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
+import 'package:admin_web_app/domain/repository/airports_repository.dart';
 import 'package:admin_web_app/ui/airports/airports_state.dart';
 import 'package:flutter/cupertino.dart';
 
 class AirportsViewModel extends ChangeNotifier {
+  final AirportsRepository _airportsRepository;
+
+  AirportsViewModel({
+    required AirportsRepository airportsRepository,
+  }) : _airportsRepository = airportsRepository;
+
   AirportsState _state = const AirportsState();
 
   AirportsState get state => _state;
-
-  final repository = AirportsRepositoryImpl();
 
   Future<void> showAirportsInfo() async {
     _state = state.copyWith(isLoading: true);
     notifyListeners();
 
-    final List<AirportsModel> airportList = await repository.getAirportsList();
+    final List<AirportsModel> airportList =
+        await _airportsRepository.getAirportsList();
     _state = state.copyWith(
       airportInfo: airportList,
       isLoading: false,

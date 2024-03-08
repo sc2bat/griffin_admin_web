@@ -115,21 +115,28 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                 'Airplane ID : ${widget.flightsModel.airplaneId}'),
                             SizedBox(
                                 height:
-                                MediaQuery.of(context).size.height * 0.05),
+                                    MediaQuery.of(context).size.height * 0.05),
                             const Text('Seat Status'),
                             Text(
                                 'Seats : /${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat}'),
-                          Row(children: [Text('First class : ??/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat}'),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width *
-                                  0.1,
+                            Row(
+                              children: [
+                                Text(
+                                    'First class : ??/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat}'),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                ),
+                                Text(
+                                    'Business class : ??/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat}'),
+                                SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
+                                ),
+                                Text(
+                                    'Economy class : ??/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat}')
+                              ],
                             ),
-                          Text('Business class : ??/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat}'),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width *
-                                  0.1,
-                            ),
-                          Text('Economy class : ??/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat}')],),
                           ],
                         ),
                 ),

@@ -1,17 +1,23 @@
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
-import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
-import 'package:admin_web_app/data/repository/flights_repository_impl.dart';
+import 'package:admin_web_app/domain/repository/airports_repository.dart';
+import 'package:admin_web_app/domain/repository/flights_repository.dart';
 import 'package:admin_web_app/ui/common/constants.dart';
 import 'package:admin_web_app/ui/flights/flights_state.dart';
 import 'package:flutter/material.dart';
 
 class FlightsViewModel extends ChangeNotifier {
+  final FlightsRepository _flightRepository;
+  final AirportsRepository _airportsRepository;
+
+  FlightsViewModel({
+    required FlightsRepository flightRepository,
+    required AirportsRepository airportsRepository,
+  })  : _flightRepository = flightRepository,
+        _airportsRepository = airportsRepository;
+
   FlightsState _state = const FlightsState();
 
   FlightsState get state => _state;
-
-  final flightRepository = FlightsRepositoryImpl();
-  final airportsRepository = AirportsRepositoryImpl();
 
   Future<void> init() async {
     // 오늘 날짜 설정
@@ -45,7 +51,7 @@ class FlightsViewModel extends ChangeNotifier {
           .airportId;
     }
     _state = state.copyWith(
-        flightInfo: await flightRepository.getFlightsList(
+        flightInfo: await _flightRepository.getFlightsList(
             date:
                 '${state.selectedYear}${state.selectedMonth.toString().padLeft(2, '0')}${state.selectedDay.toString().padLeft(2, '0')}',
             departureTime: departureTime,
@@ -65,7 +71,7 @@ class FlightsViewModel extends ChangeNotifier {
 
   Future<void> showAirportsInfo() async {
     _state = state.copyWith(
-        airportsInfo: await airportsRepository.getAirportsList());
+        airportsInfo: await _airportsRepository.getAirportsList());
     notifyListeners();
   }
 

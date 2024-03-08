@@ -1,9 +1,13 @@
-import 'package:admin_web_app/data/repository/airplanes_repository_impl.dart';
+import 'package:admin_web_app/domain/repository/airplanes_repository.dart';
 import 'package:admin_web_app/ui/flights/detail/flight_detail_state.dart';
 import 'package:flutter/material.dart';
 
 class FlightDetailViewModel extends ChangeNotifier {
-  final airplanesRepository = AirplanesRepositoryImpl();
+  final AirplanesRepository _airplanesRepository;
+
+  FlightDetailViewModel({
+    required AirplanesRepository airplanesRepository,
+  }) : _airplanesRepository = airplanesRepository;
 
   FlightDetailState _state = const FlightDetailState();
 
@@ -18,7 +22,7 @@ class FlightDetailViewModel extends ChangeNotifier {
     notifyListeners();
 
     _state = state.copyWith(
-        airplanesList: await airplanesRepository.getAirplanesList(),
+        airplanesList: await _airplanesRepository.getAirplanesList(),
         isLoading: false);
     notifyListeners();
   }
