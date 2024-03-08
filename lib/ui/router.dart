@@ -5,7 +5,6 @@ import 'package:admin_web_app/ui/book/book_screen.dart';
 import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_screen.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_view_model.dart';
-import 'package:admin_web_app/ui/airports/airports_view_model.dart';
 import 'package:admin_web_app/ui/flights/detail/flight_detail_screen.dart';
 import 'package:admin_web_app/ui/flights/detail/flight_detail_view_model.dart';
 import 'package:admin_web_app/ui/flights/flights_screen.dart';
@@ -55,8 +54,11 @@ final router = GoRouter(
             final flightDetailMap = state.extra! as Map<String, dynamic>;
             return ChangeNotifierProvider(
               create: (_) => FlightDetailViewModel(),
-              child:
-                  FlightDetailScreen(flightsModel: flightDetailMap['flightsModel']),
+              child: FlightDetailScreen(
+                flightsModel: flightDetailMap['flightsModel'],
+                departureAirportModel: flightDetailMap['departureAirportModel'],
+                arrivalAirportModel: flightDetailMap['arrivalAirportModel'],
+              ),
             );
           },
           routes: const [],

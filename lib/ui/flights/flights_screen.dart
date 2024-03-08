@@ -428,7 +428,7 @@ class FlightsDataTableSource extends DataTableSource {
           '${flight.arrivalTime.substring(0, 2)}:${flight.arrivalTime.substring(2)}')),
       DataCell(Text(departureName.airportName)),
       DataCell(Text(arrivalName.airportName)),
-      DataCell(IconButton(onPressed: (){context.push('/flights/flightDetail',extra: {'flightsModel': flight});}, icon: const Icon(Icons.remove_red_eye_rounded))),
+      DataCell(IconButton(onPressed: (){context.push('/flights/flightDetail',extra: {'flightsModel': flight,'departureAirportModel':departureName,'arrivalAirportModel':arrivalName});}, icon: const Icon(Icons.remove_red_eye_rounded))),
     ]);
   }
 

@@ -1,14 +1,21 @@
+import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
+import 'package:admin_web_app/ui/flights/detail/flight_detail_view_model.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class FlightDetailScreen extends StatefulWidget {
   const FlightDetailScreen({
     super.key,
     required this.flightsModel,
+    required this.departureAirportModel,
+    required this.arrivalAirportModel,
   });
 
   final FlightsModel flightsModel;
+  final AirportsModel departureAirportModel;
+  final AirportsModel arrivalAirportModel;
 
   @override
   State<FlightDetailScreen> createState() => _FlightDetailScreenState();
@@ -16,7 +23,19 @@ class FlightDetailScreen extends StatefulWidget {
 
 class _FlightDetailScreenState extends State<FlightDetailScreen> {
   @override
+  void initState() {
+    Future.microtask(() {
+      final FlightDetailViewModel flightDetailViewModel =
+          context.read<FlightDetailViewModel>();
+      flightDetailViewModel.init();
+    });
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final viewModel = context.watch<FlightDetailViewModel>();
+    final state = viewModel.state;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Flight Detail'),
@@ -37,48 +56,82 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                     color: const Color(0xFFfbf2ff)),
                 child: Padding(
                   padding: const EdgeInsets.all(32.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Flight ID : ${widget.flightsModel.flightId}'),
-                      Text('Flight Date : ${widget.flightsModel.flightDate}'),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
+                  child: state.isLoading
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Text('Flight ID : ${widget.flightsModel.flightId}'),
                             Text(
-                                'Departure Airport : ${widget.flightsModel.departureLoc}'),
+                                'Flight Date : ${widget.flightsModel.flightDate.substring(0, 4)}.${widget.flightsModel.flightDate.substring(4, 6)}.${widget.flightsModel.flightDate.substring(6)}'),
                             SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.1,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05),
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: [
+                                  Text(
+                                      'Departure Airport : ${widget.departureAirportModel.airportName}'),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.06,
+                                  ),
+                                  const Icon(
+                                    Icons.more_horiz,
+                                    color: Colors.grey,
+                                  ),
+                                  const Icon(
+                                    Icons.flight_takeoff_outlined,
+                                    color: Colors.grey,
+                                  ),
+                                  const Icon(
+                                    Icons.more_horiz,
+                                    color: Colors.grey,
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.06,
+                                  ),
+                                  Text(
+                                      'Arrival Airport : ${widget.arrivalAirportModel.airportName}'),
+                                ],
+                              ),
                             ),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05),
                             Text(
-                                'Arrival Airport : ${widget.flightsModel.arrivalLoc}'),
+                                'Departure Time : ${widget.flightsModel.departureTime.substring(0, 2)}:${widget.flightsModel.departureTime.substring(2)}'),
+                            Text(
+                                'Arrival Time : ${widget.flightsModel.arrivalTime.substring(0, 2)}:${widget.flightsModel.arrivalTime.substring(2)}'),
+                            SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.05),
+                            Text(
+                                'Airplane ID : ${widget.flightsModel.airplaneId}'),
+                            SizedBox(
+                                height:
+                                MediaQuery.of(context).size.height * 0.05),
+                            const Text('Seat Status'),
+                            Text(
+                                'Seats : /${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat}'),
+                          Row(children: [Text('First class : ??/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat}'),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width *
+                                  0.1,
+                            ),
+                          Text('Business class : ??/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat}'),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width *
+                                  0.1,
+                            ),
+                          Text('Economy class : ??/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat}')],),
                           ],
                         ),
-                      ),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(
-                          children: [
-                            Text(
-                                'Departure Time : ${widget.flightsModel.departureTime}'),
-                            SizedBox(
-                              width: MediaQuery.of(context).size.width * 0.111,
-                            ),
-                            Text(
-                                'Arrival Time : ${widget.flightsModel.arrivalTime}'),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                          height: MediaQuery.of(context).size.height * 0.05),
-                      Text('Airplane ID : ${widget.flightsModel.airplaneId}'),
-                      const Text('Seat Status'),
-                    ],
-                  ),
                 ),
               ),
             ),
