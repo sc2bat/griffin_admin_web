@@ -50,11 +50,11 @@ final List<Map<String, dynamic>> menuList = [
     'name': 'user',
     'icon': const Icon(Icons.supervised_user_circle),
   },
-  {
-    'menuid': '6',
-    'name': 'payment',
-    'icon': const Icon(Icons.payment),
-  },
+  // {
+  //   'menuid': '6',
+  //   'name': 'payment',
+  //   'icon': const Icon(Icons.payment),
+  // },
 ];
 
 Widget logoImage(context) {
@@ -70,12 +70,12 @@ Widget logoImage(context) {
       ),
       width: width > 500 ? width * 0.2 : 56,
       height: width > 500 ? width * 0.2 : 56,
-      decoration: BoxDecoration(
-        border: Border.all(
-          width: 1.0,
-          color: Colors.black54,
-        ),
-      ),
+      decoration: const BoxDecoration(
+          // border: Border.all(
+          //   width: 1.0,
+          //   color: Colors.black54,
+          // ),
+          ),
       child: Image.asset(logoSampleImage),
     ),
   );

@@ -1,4 +1,5 @@
-const String logoSampleImage = 'assets/images/common/logo_sample.png';
+const String logoSampleImage = 'assets/images/common/logo.png';
+// const String logoSampleImage = 'assets/images/common/logo_sample.png';
 
 List<int> dateFixedYearList = List.generate(10, (index) => 2024 + index);
 List<int> dateFixedMonthList = List.generate(12, (index) => index + 1);

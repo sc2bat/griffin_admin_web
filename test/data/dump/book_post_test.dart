@@ -12,7 +12,7 @@ void main() {
     String url = 'http://${Env.griffinFlightUrl}/books/';
 
     Map<String, dynamic> data = {
-      "user_id": 7,
+      "user_id": 6,
       "flight_id": 1,
       "class_seat": "none",
       "status": 0,
