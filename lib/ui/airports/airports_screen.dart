@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:admin_web_app/ui/airports/airports_view_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
+import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
 import '../../data/model/airports/airports_model.dart';
@@ -16,22 +20,35 @@ class AirportsScreen extends StatefulWidget {
 
 class _AirportsScreenState extends State<AirportsScreen> {
   final filterController = TextEditingController();
-
-  @override
-  void dispose() {
-    filterController.dispose();
-    super.dispose();
-  }
+  StreamSubscription? _streamSubscription;
 
   @override
   void initState() {
     Future.microtask(() {
       final AirportsViewModel airportsViewModel =
           context.read<AirportsViewModel>();
+      airportsViewModel.init();
       airportsViewModel.filterOptionInit();
       airportsViewModel.showAirportsInfo();
+      _streamSubscription = airportsViewModel.signResult.listen((event) {
+        switch (event) {
+          case SignStatus.signSuccess:
+          case SignStatus.signFail:
+          case SignStatus.isSignedIn:
+            context.go('/airports');
+          case SignStatus.isNotSignedIn:
+            context.go('/sign');
+        }
+      });
     });
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    filterController.dispose();
+    _streamSubscription?.cancel();
+    super.dispose();
   }
 
   @override
@@ -43,6 +60,18 @@ class _AirportsScreenState extends State<AirportsScreen> {
         title: const Center(
           child: Text('GRIFFIN AIRPORT WEB PAGE'),
         ),
+        actions: [
+          Text(state.accountModel?.email ?? ''),
+          const SizedBox(
+            width: 8.0,
+          ),
+          ElevatedButton(
+            onPressed: () {
+              viewModel.signOut();
+            },
+            child: const Text('SignOut'),
+          ),
+        ],
       ),
       body: Container(
         child: Padding(

@@ -1,19 +1,47 @@
+import 'dart:async';
+
+import 'package:admin_web_app/data/model/account/account_model.dart';
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
-import 'package:admin_web_app/data/repository/airports_repository_impl.dart';
-import 'package:admin_web_app/data/repository/flights_repository_impl.dart';
+import 'package:admin_web_app/domain/repository/airports_repository.dart';
+import 'package:admin_web_app/domain/repository/flights_repository.dart';
+import 'package:admin_web_app/domain/repository/session_repository.dart';
+import 'package:admin_web_app/domain/repository/sign_repository.dart';
 import 'package:admin_web_app/ui/common/constants.dart';
+import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/ui/flights/flights_state.dart';
+import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:flutter/material.dart';
 
 class FlightsViewModel extends ChangeNotifier {
+  final FlightsRepository _flightRepository;
+  final AirportsRepository _airportsRepository;
+  final SignRepository _signRepository;
+  final SessionRepository _sessionRepository;
+
+  FlightsViewModel({
+    required FlightsRepository flightRepository,
+    required AirportsRepository airportsRepository,
+    required SignRepository signRepository,
+    required SessionRepository sessionRepository,
+  })  : _flightRepository = flightRepository,
+        _airportsRepository = airportsRepository,
+        _signRepository = signRepository,
+        _sessionRepository = sessionRepository;
+
   FlightsState _state = const FlightsState();
 
   FlightsState get state => _state;
 
-  final flightRepository = FlightsRepositoryImpl();
-  final airportsRepository = AirportsRepositoryImpl();
+  final StreamController<SignStatus> _signStatus = StreamController();
+
+  Stream<SignStatus> get signResult => _signStatus.stream;
 
   Future<void> init() async {
+    // _updateLoading(true);
+
+    await checkSession();
+
+    // _updateLoading(false);
     // 오늘 날짜 설정
     initSelectDateOption();
     // 날짜 선택 옵션
@@ -45,7 +73,7 @@ class FlightsViewModel extends ChangeNotifier {
           .airportId;
     }
     _state = state.copyWith(
-        flightInfo: await flightRepository.getFlightsList(
+        flightInfo: await _flightRepository.getFlightsList(
             date:
                 '${state.selectedYear}${state.selectedMonth.toString().padLeft(2, '0')}${state.selectedDay.toString().padLeft(2, '0')}',
             departureTime: departureTime,
@@ -65,7 +93,7 @@ class FlightsViewModel extends ChangeNotifier {
 
   Future<void> showAirportsInfo() async {
     _state = state.copyWith(
-        airportsInfo: await airportsRepository.getAirportsList());
+        airportsInfo: await _airportsRepository.getAirportsList());
     notifyListeners();
   }
 
@@ -115,6 +143,7 @@ class FlightsViewModel extends ChangeNotifier {
     _state = state.copyWith(
         airportsName:
             state.airportsInfo.map((e) => e.airportName).toSet().toList());
+    notifyListeners();
   }
 
   void onSort(int columnIndex, bool ascending) {
@@ -169,5 +198,35 @@ class FlightsViewModel extends ChangeNotifier {
   void onChangeArrivalLoc(String? value) {
     _state = state.copyWith(selectedArrivalLoc: value);
     notifyListeners();
+  }
+
+  Future<void> checkSession() async {
+    try {
+      final AccountModel accountModel = await _sessionRepository.getSession();
+      _signStatus.add(SignStatus.isSignedIn);
+      _state = state.copyWith(accountModel: accountModel);
+    } catch (e) {
+      await _sessionRepository.deleteSession();
+      logger.info(e);
+      _signStatus.add(SignStatus.isNotSignedIn);
+    }
+  }
+
+  // void _updateLoading(bool isLoading) {
+  //   _state = state.copyWith(isLoading: isLoading);
+  //   notifyListeners();
+  // }
+
+  Future<void> signOut() async {
+    try {
+      _state = state.copyWith(accountModel: null);
+      notifyListeners();
+      await _sessionRepository.deleteSession();
+      await _signRepository.signOut();
+      _signStatus.add(SignStatus.isNotSignedIn);
+    } catch (e) {
+      logger.info(e);
+      _signStatus.add(SignStatus.isNotSignedIn);
+    }
   }
 }

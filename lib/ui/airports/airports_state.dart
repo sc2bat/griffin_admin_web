@@ -1,3 +1,4 @@
+import 'package:admin_web_app/data/model/account/account_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -16,6 +17,7 @@ class AirportsState with _$AirportsState {
     @Default([]) List<AirportsModel> filteredData,
     @Default([]) List<AirportsModel> airportInfo,
     @Default(false) bool isLoading,
+    AccountModel? accountModel,
   }) = _AirportsState;
 
   factory AirportsState.fromJson(Map<String, Object?> json) =>
