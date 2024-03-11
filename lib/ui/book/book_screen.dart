@@ -192,7 +192,7 @@ class _BookScreenState extends State<BookScreen> {
                                 child: DropdownButton2<String>(
                                   isExpanded: true,
                                   hint: Text(
-                                    'Select Item',
+                                    'Select Book Status',
                                     style: TextStyle(
                                       fontSize: 14,
                                       color: Theme.of(context).hintColor,
@@ -203,17 +203,17 @@ class _BookScreenState extends State<BookScreen> {
                                           DropdownMenuItem<String>(
                                             value: item,
                                             child: Text(
-                                              '$item 일',
+                                              item,
                                               style: const TextStyle(
                                                 fontSize: 14,
                                               ),
                                             ),
                                           ))
                                       .toList(),
-                                  value: '${bookState.selectedDay}',
+                                  value: bookState.selectedBookStatus,
                                   onChanged: (String? value) {
                                     if (value != null) {
-                                      bookViewModel.selectDay(int.parse(value));
+                                      bookViewModel.selectBookStatus(value);
                                     } else {
                                       logger.info('year select error');
                                     }
@@ -251,10 +251,10 @@ class _BookScreenState extends State<BookScreen> {
                                             ),
                                           ))
                                       .toList(),
-                                  value: '${bookState.selectedPayStatus}',
+                                  value: bookState.selectedPayStatus,
                                   onChanged: (String? value) {
                                     if (value != null) {
-                                      bookViewModel.selectDay(int.parse(value));
+                                      bookViewModel.selectPayStatus(value);
                                     } else {
                                       logger.info('year select error');
                                     }
@@ -389,24 +389,28 @@ class _BookData extends DataTableSource {
       ),
       DataCell(
         Text(
-          item.status == 0
-              ? '예약 중'
-              : item.status == 1
-                  ? '예약완료'
-                  : item.status == 4
-                      ? '예약취소'
-                      : '오류',
+          item.status == -1
+              ? '미예약'
+              : item.status == 0
+                  ? '예약중'
+                  : item.status == 1
+                      ? '예약완료'
+                      : item.status == 2
+                          ? '예약취소'
+                          : '오류',
         ),
       ),
       DataCell(
         Text(
-          item.payStatus == 0
+          item.payStatus == -1
               ? '미결제'
-              : item.payStatus == 1
-                  ? '결제 중'
-                  : item.payStatus == 2
-                      ? '결제 완료'
-                      : '오류',
+              : item.payStatus == 0
+                  ? '결제전'
+                  : item.payStatus == 1
+                      ? '결제완료'
+                      : item.status == 2
+                          ? '결제취소'
+                          : '오류',
         ),
       ),
       DataCell(

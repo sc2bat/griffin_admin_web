@@ -16,7 +16,7 @@ class BookState with _$BookState {
     @Default(2024) int selectedYear,
     @Default(1) int selectedMonth,
     @Default(1) int selectedDay,
-    @Default(0) int selectedBookStatus,
-    @Default(0) int selectedPayStatus,
+    @Default('') String selectedBookStatus,
+    @Default('') String selectedPayStatus,
   }) = _BookState;
 }

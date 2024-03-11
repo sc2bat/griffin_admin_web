@@ -17,20 +17,22 @@ class BookViewModel with ChangeNotifier {
     _bookState = bookState.copyWith(isLoading: true);
     notifyListeners();
 
-    // 오늘 날짜 설정
-    initSelectDateOption();
-    // 날짜 선택 옵션
+    initSelectOption();
     updateSelectDayOption();
+    updateSelectStatusOption();
+
     // 예약 데이터 불러오기
     await getBookList();
   }
 
-  void initSelectDateOption() {
+  void initSelectOption() {
     DateTime dateTime = DateTime.now();
     _bookState = bookState.copyWith(
       selectedYear: dateTime.year,
       selectedMonth: dateTime.month,
       selectedDay: dateTime.day,
+      selectedBookStatus: '예약중',
+      selectedPayStatus: '결제전',
     );
     notifyListeners();
   }
@@ -43,9 +45,18 @@ class BookViewModel with ChangeNotifier {
       _bookState = bookState.copyWith(selectedDay: calcDayList.last);
     }
     _bookState = bookState.copyWith(
-        bookOptionYear: dateFixedYearList,
-        bookOptionMonth: dateFixedMonthList,
-        bookOptionDay: calcDayList);
+      bookOptionYear: dateFixedYearList,
+      bookOptionMonth: dateFixedMonthList,
+      bookOptionDay: calcDayList,
+    );
+    notifyListeners();
+  }
+
+  void updateSelectStatusOption() {
+    _bookState = bookState.copyWith(
+      bookStatusOption: bookStatusList,
+      bookPayStatusOption: payStatusList,
+    );
     notifyListeners();
   }
 
@@ -67,12 +78,12 @@ class BookViewModel with ChangeNotifier {
     updateSelectDayOption();
   }
 
-  void selectBookStatus(int bookStatus) {
+  void selectBookStatus(String bookStatus) {
     _bookState = bookState.copyWith(selectedBookStatus: bookStatus);
     notifyListeners();
   }
 
-  void selectPayStatus(int payStatus) {
+  void selectPayStatus(String payStatus) {
     _bookState = bookState.copyWith(selectedPayStatus: payStatus);
     notifyListeners();
   }
@@ -83,11 +94,8 @@ class BookViewModel with ChangeNotifier {
 
     Map<String, dynamic> jsonData = {
       'flight_date': searchDate,
-      'book_status': bookState.selectedBookStatus != 9
-          ? bookState.selectedBookStatus
-          : null,
-      'pay_status':
-          bookState.selectedPayStatus != 9 ? bookState.selectedPayStatus : null,
+      'status': bookStatusConvert(bookState.selectedBookStatus),
+      'pay_status': payStatusConvert(bookState.selectedPayStatus),
     };
 
     final List<BookModel> bookList =
@@ -95,5 +103,35 @@ class BookViewModel with ChangeNotifier {
 
     _bookState = bookState.copyWith(isLoading: false, bookList: bookList);
     notifyListeners();
+  }
+
+  int bookStatusConvert(String bookStatus) {
+    switch (bookStatus) {
+      case '미예약':
+        return -1;
+      case '예약중':
+        return 0;
+      case '예약완료':
+        return 1;
+      case '예약취소':
+        return 2;
+      default:
+        return 4;
+    }
+  }
+
+  int payStatusConvert(String payStatus) {
+    switch (payStatus) {
+      case '미결제':
+        return -1;
+      case '결제전':
+        return 0;
+      case '결제완료':
+        return 1;
+      case '결제취소':
+        return 2;
+      default:
+        return 4;
+    }
   }
 }
