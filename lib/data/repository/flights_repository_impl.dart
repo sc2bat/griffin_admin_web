@@ -31,19 +31,4 @@ class FlightsRepositoryImpl implements FlightsRepository {
     final List<dynamic> json = jsonDecode(response.body);
     return json.map((e) => FlightsModel.fromJson(e)).toList();
   }
-
-  // @override
-  // Future<FlightsModel> getOneFlight(int flightId) async {
-  //   try {
-  //     final response = await fetchHttp(
-  //         '${Env.griffinFlightUrl}/flights/?flight_Id=$flightId');
-  //
-  //     final jsonData = jsonDecode(response.body);
-  //
-  //     return jsonData.map((e) => FlightsModel.fromJson(e));
-  //   } catch (e) {
-  //     logger.info('FlightsRepository getFlightsList => $e');
-  //     throw Exception(e);
-  //   }
-  // }
 }

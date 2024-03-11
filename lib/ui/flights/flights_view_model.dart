@@ -143,6 +143,7 @@ class FlightsViewModel extends ChangeNotifier {
     _state = state.copyWith(
         airportsName:
             state.airportsInfo.map((e) => e.airportName).toSet().toList());
+    notifyListeners();
   }
 
   void onSort(int columnIndex, bool ascending) {

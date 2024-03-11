@@ -7,6 +7,4 @@ abstract class FlightsRepository {
       String? arrivalTime,
       int? departureLoc,
       int? arrivalLoc});
-
-  // Future<FlightsModel> getOneFlight(int flightId);
 }

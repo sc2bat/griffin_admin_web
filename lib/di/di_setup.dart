@@ -106,6 +106,7 @@ void diSetup() {
     ..registerFactory<FlightDetailViewModel>(
       () => FlightDetailViewModel(
         airplanesRepository: getIt<AirplanesRepository>(),
+        bookRepository: getIt<BookRepository>(),
       ),
     );
 }
