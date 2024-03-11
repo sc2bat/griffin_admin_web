@@ -1,3 +1,4 @@
+import 'package:admin_web_app/data/model/flights/flights_model.dart';
 import 'package:admin_web_app/domain/repository/airplanes_repository.dart';
 import 'package:admin_web_app/domain/repository/book_repository.dart';
 import 'package:admin_web_app/ui/flights/detail/flight_detail_state.dart';
@@ -18,9 +19,34 @@ class FlightDetailViewModel extends ChangeNotifier {
 
   FlightDetailState get state => _state;
 
-  Future<void> init() async {
+  List<String> first = [];
+  List<String> businessClass = [];
+  List<String> economyClass = [];
+
+  Future<void> init(FlightsModel flightsModel) async {
     await getAirplanesList();
     await getClassSeats();
+
+    for (int i = 0; i < state.classSeats.length; i++) {
+      getRemainSeats(
+          state.airplanesList
+              .firstWhere((e) => e.airplaneId == flightsModel.airplaneId)
+              .firstClassSeat,
+          state.airplanesList
+              .firstWhere((e) => e.airplaneId == flightsModel.airplaneId)
+              .businessClassSeat,
+          state.airplanesList
+              .firstWhere((e) => e.airplaneId == flightsModel.airplaneId)
+              .economyClassSeat,
+          state.classSeats[i]);
+    }
+
+    _state = state.copyWith(
+      firstClass: first,
+      businessClass: businessClass,
+      economyClass: economyClass,
+    );
+    notifyListeners();
   }
 
   Future<void> getAirplanesList() async {
@@ -61,19 +87,22 @@ class FlightDetailViewModel extends ChangeNotifier {
         break;
     }
     int index = index1 + index2;
+    logger.info('index ==> $index');
     if (index <= a - 1) {
-      state.firstClass.add(seat);
+      // state.firstClass.add(seat);
+      first.add(seat);
     } else if (index >= a && index <= (a + b - 1)) {
-      state.businessClass.add(seat);
+      businessClass.add(seat);
     } else {
-      state.economyClass.add(seat);
+      economyClass.add(seat);
     }
-    notifyListeners();
   }
 
   Future<void> getClassSeats() async {
+    final List<String> classSeats =
+        state.bookList.map((e) => e.classSeat).toList();
     _state = state.copyWith(
-        classSeats: state.bookList.map((e) => e.classSeat).toList());
+        classSeats: classSeats.where((element) => element != 'none').toList());
     notifyListeners();
   }
 }
