@@ -24,8 +24,8 @@ class FlightDetailViewModel extends ChangeNotifier {
   List<String> economyClass = [];
 
   Future<void> init(FlightsModel flightsModel) async {
-    await getAirplanesList();
-    await getClassSeats();
+    await getAirplanesList(flightsModel);
+    await getClassSeats(flightsModel);
 
     for (int i = 0; i < state.classSeats.length; i++) {
       getRemainSeats(
@@ -49,9 +49,9 @@ class FlightDetailViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> getAirplanesList() async {
+  Future<void> getAirplanesList(FlightsModel flightsModel) async {
     Map<String, dynamic> jsonData = {
-      'flight_date': null,
+      'flight_id': flightsModel.flightId,
     };
     _state = state.copyWith(isLoading: true);
     notifyListeners();
@@ -60,6 +60,7 @@ class FlightDetailViewModel extends ChangeNotifier {
         airplanesList: await _airplanesRepository.getAirplanesList(),
         bookList: await _bookRepository.getBookList(jsonData),
         isLoading: false);
+
     notifyListeners();
   }
 
@@ -98,9 +99,13 @@ class FlightDetailViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getClassSeats() async {
+  Future<void> getClassSeats(FlightsModel flightsModel) async {
     final List<String> classSeats =
-        state.bookList.map((e) => e.classSeat).toList();
+        // state.bookList.map((e) => e.classSeat).toList();
+        state.bookList
+            .where((e) => e.flightId == flightsModel.flightId)
+            .map((e) => e.classSeat)
+            .toList();
     _state = state.copyWith(
         classSeats: classSeats.where((element) => element != 'none').toList());
     notifyListeners();
