@@ -38,6 +38,7 @@ class DashboardViewModel with ChangeNotifier {
     await getBookList();
     initDate();
     getCashList();
+    getBookCountList();
   }
 
   Future<void> checkSession() async {
@@ -86,7 +87,6 @@ class DashboardViewModel with ChangeNotifier {
     DateTime dateTime = DateTime.now();
     _dashboardState =
         dashboardState.copyWith(date: dateTime.toIso8601String().split('T')[0]);
-    logger.info(dashboardState.date);
   }
 
   void getCashList() {
@@ -95,21 +95,23 @@ class DashboardViewModel with ChangeNotifier {
     Map<String, int> amountMap = {};
     List<DateTime> dateList = [];
     List<Map<String, dynamic>> resultList = [];
+
     for (int i = 0; i < 7; i++) {
       DateTime date = DateTime.now().subtract(Duration(days: i));
       dateList.add(date);
     }
 
     for (var data in originList) {
-      String date = data.createdAt.toString();
+      String date = data.createdAt.toString().split(' ')[0];
       int payAmount = int.parse('${data.payAmount}');
-      amountMap.putIfAbsent(date, () => 0);
       amountMap[date] = (amountMap[date] ?? 0) + payAmount;
+      logger.info(amountMap);
     }
 
     List<Map<String, dynamic>> amountList = amountMap.entries.map((entry) {
       return {'date': entry.key.split(' ')[0], 'pay_amount': entry.value};
     }).toList();
+    logger.info(amountList);
 
     for (var date in dateList) {
       String formattedDate = date.toIso8601String().split('T')[0];
@@ -123,10 +125,50 @@ class DashboardViewModel with ChangeNotifier {
         }
       }
       resultList.add(result);
-      _dashboardState =
-          dashboardState.copyWith(cashList: resultList.reversed.toList());
-      notifyListeners();
     }
-    logger.info(dashboardState.cashList);
+    _dashboardState =
+        dashboardState.copyWith(cashList: resultList.reversed.toList());
+    notifyListeners();
+  }
+
+  void getBookCountList() {
+    List<BookModel> originList =
+        dashboardState.bookList.where((e) => e.status == 1).toList();
+    Map<String, int> amountMap = {};
+    List<DateTime> dateList = [];
+    List<Map<String, dynamic>> resultList = [];
+
+    for (int i = 0; i < 7; i++) {
+      DateTime date = DateTime.now().subtract(Duration(days: i));
+      dateList.add(date);
+    }
+
+    for (var data in originList) {
+      String date = data.createdAt.toString().split(' ')[0];
+      amountMap[date] = (amountMap[date] ?? 0) + data.status;
+    }
+    List<Map<String, dynamic>> amountList = amountMap.entries.map((entry) {
+      return {'date': entry.key.split(' ')[0], 'book_count': entry.value};
+    }).toList();
+    logger.info(amountList);
+
+    for (var date in dateList) {
+      String formattedDate = date.toIso8601String().split('T')[0];
+      Map<String, dynamic> result = {'date': formattedDate, 'book_count': 0};
+
+      // 주어진 데이터에서 해당 날짜와 일치하는 값을 찾아 결과에 반영
+      for (var data in amountList) {
+        if (data['date'] == formattedDate) {
+          result['book_count'] = data['book_count'];
+          break;
+        }
+      }
+      resultList.add(result);
+    }
+
+    _dashboardState =
+        dashboardState.copyWith(bookCountList: resultList.reversed.toList());
+    notifyListeners();
+    // logger.info(dashboardState.bookCountList);
   }
 }

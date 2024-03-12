@@ -12,5 +12,6 @@ class DashboardState with _$DashboardState {
     @Default([]) List<BookModel> bookList,
     @Default('') String date,
     @Default([]) List<Map<String, dynamic>> cashList,
+    @Default([]) List<Map<String, dynamic>> bookCountList,
   }) = _DashboardState;
 }

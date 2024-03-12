@@ -5,6 +5,7 @@ import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/ui/dashboard/dashboard_view_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -189,24 +190,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(' - 일별 수익금 차트'),
-                                    Card(
-                                        child:
-                                            _SampleChart(chartName: 'chart 1')),
-                                  ],
-                                ),
-                                const Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(' - 일별 예약현황 차트'),
-                                    Card(
-                                        child:
-                                            _SampleChart(chartName: 'chart 2')),
-                                  ],
-                                ),
                                 Column(children: [
                                   const Text(' - 일별 수익금 차트'),
                                   SizedBox(
@@ -220,6 +203,70 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                               index,
                                               dashboardState.cashList[index]
                                                   ['pay_amount'],
+                                            ),
+                                          ),
+                                          titlesData: FlTitlesData(
+                                            show: true,
+                                            topTitles: const AxisTitles(
+                                              sideTitles:
+                                                  SideTitles(showTitles: false),
+                                            ),
+                                            rightTitles: const AxisTitles(
+                                              sideTitles:
+                                                  SideTitles(showTitles: false),
+                                            ),
+                                            bottomTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                showTitles: true,
+                                                getTitlesWidget: bottomTitles,
+                                              ),
+                                            ),
+                                            leftTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                reservedSize: 60,
+                                                showTitles: true,
+                                                getTitlesWidget: leftTitles,
+                                              ),
+                                            ),
+                                          ),
+                                          barTouchData: BarTouchData(
+                                              enabled: true,
+                                              handleBuiltInTouches: false,
+                                              touchCallback: (event, response) {
+                                                if (response != null &&
+                                                    event is FlTapUpEvent) {
+                                                  setState(() {
+                                                    final x = response.spot!
+                                                        .touchedBarGroup.x;
+                                                    final isShowing =
+                                                        showingTooltip == x;
+                                                    if (isShowing) {
+                                                      showingTooltip = -1;
+                                                    } else {
+                                                      showingTooltip = x;
+                                                    }
+                                                  });
+                                                }
+                                              }))),
+                                    ),
+                                  ),
+
+                                  // BarChart(BarChartData())
+                                ]),
+                                Column(children: [
+                                  const Text(' - 일별 예약 현황 차트'),
+                                  SizedBox(
+                                    height: 224.0,
+                                    child: AspectRatio(
+                                      aspectRatio: 2.0,
+                                      child: BarChart(BarChartData(
+                                          barGroups: List.generate(
+                                            dashboardState.bookCountList.length,
+                                            (index) => generateGroupData(
+                                              index,
+                                              dashboardState
+                                                      .bookCountList[index]
+                                                  ['book_count'],
                                             ),
                                           ),
                                           titlesData: FlTitlesData(
@@ -302,23 +349,6 @@ class _SampleCard extends StatelessWidget {
             children: [Text(cardName), Text(cardContext)],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _SampleChart extends StatelessWidget {
-  const _SampleChart({required this.chartName});
-
-  final String chartName;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 320.0,
-      height: 100,
-      child: Center(
-        child: Text(chartName),
       ),
     );
   }
