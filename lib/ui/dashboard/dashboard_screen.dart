@@ -20,6 +20,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   StreamSubscription? _stremSubscription;
   late int showingTooltip;
 
+
   @override
   void initState() {
     Future.microtask(() {
@@ -346,7 +347,10 @@ class _SampleCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            children: [Text(cardName), Text(cardContext)],
+            children: [Text(cardName,), Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(cardContext,style: const TextStyle(fontWeight: FontWeight.bold),),
+            )],
           ),
         ),
       ),

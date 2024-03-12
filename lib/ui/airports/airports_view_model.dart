@@ -45,7 +45,7 @@ class AirportsViewModel extends ChangeNotifier {
     final List<AirportsModel> airportList =
         await _airportsRepository.getAirportsList();
     _state = state.copyWith(
-      airportInfo: airportList,
+      airportInfo: airportList.where((e) => e.isDeleted ==0).toList(),
       isLoading: false,
     );
     onSort(state.sortColumnIndex, state.sort, '');
