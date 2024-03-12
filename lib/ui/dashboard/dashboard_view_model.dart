@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:admin_web_app/data/model/account/account_model.dart';
+import 'package:admin_web_app/data/model/book/book_model.dart';
 import 'package:admin_web_app/domain/repository/book_repository.dart';
 import 'package:admin_web_app/domain/repository/session_repository.dart';
 import 'package:admin_web_app/domain/repository/sign_repository.dart';
@@ -36,6 +37,7 @@ class DashboardViewModel with ChangeNotifier {
     // _updateLoading(false);
     await getBookList();
     initDate();
+    getCashList();
   }
 
   Future<void> checkSession() async {
@@ -69,9 +71,7 @@ class DashboardViewModel with ChangeNotifier {
   }
 
   Future<void> getBookList() async {
-    Map<String, dynamic> jsonData = {
-      'flight_id': null
-    };
+    Map<String, dynamic> jsonData = {'flight_id': null};
     _dashboardState = dashboardState.copyWith(isLoading: true);
     notifyListeners();
 
@@ -81,10 +81,52 @@ class DashboardViewModel with ChangeNotifier {
 
     notifyListeners();
   }
-  void initDate (){
+
+  void initDate() {
     DateTime dateTime = DateTime.now();
-    _dashboardState = dashboardState.copyWith(date: dateTime.toIso8601String());
+    _dashboardState =
+        dashboardState.copyWith(date: dateTime.toIso8601String().split('T')[0]);
     logger.info(dashboardState.date);
   }
-}
 
+  void getCashList() {
+    List<BookModel> originList =
+        dashboardState.bookList.where((e) => e.payStatus == 1).toList();
+    Map<String, int> amountMap = {};
+    List<DateTime> dateList = [];
+    List<Map<String, dynamic>> resultList = [];
+    for (int i = 0; i < 7; i++) {
+      DateTime date = DateTime.now().subtract(Duration(days: i));
+      dateList.add(date);
+    }
+
+    for (var data in originList) {
+      String date = data.createdAt.toString();
+      int payAmount = int.parse('${data.payAmount}');
+      amountMap.putIfAbsent(date, () => 0);
+      amountMap[date] = (amountMap[date] ?? 0) + payAmount;
+    }
+
+    List<Map<String, dynamic>> amountList = amountMap.entries.map((entry) {
+      return {'date': entry.key.split(' ')[0], 'pay_amount': entry.value};
+    }).toList();
+
+    for (var date in dateList) {
+      String formattedDate = date.toIso8601String().split('T')[0];
+      Map<String, dynamic> result = {'date': formattedDate, 'pay_amount': 0};
+
+      // 주어진 데이터에서 해당 날짜와 일치하는 값을 찾아 결과에 반영
+      for (var data in amountList) {
+        if (data['date'] == formattedDate) {
+          result['pay_amount'] = data['pay_amount'];
+          break;
+        }
+      }
+      resultList.add(result);
+      _dashboardState =
+          dashboardState.copyWith(cashList: resultList.reversed.toList());
+      notifyListeners();
+    }
+    logger.info(dashboardState.cashList);
+  }
+}
