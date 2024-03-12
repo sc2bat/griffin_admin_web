@@ -70,6 +70,7 @@ void diSetup() {
       () => DashboardViewModel(
         signRepository: getIt<SignRepository>(),
         sessionRepository: getIt<SessionRepository>(),
+        bookRepository: getIt<BookRepository>(),
       ),
     )
     ..registerFactory<UserViewModel>(

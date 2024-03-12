@@ -81,51 +81,77 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 dashboardState.isLoading
                     ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : const SingleChildScrollView(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Card(child: _SampleCard(cardName: 'Card 1')),
-                                Card(child: _SampleCard(cardName: 'Card 2')),
-                                Card(child: _SampleCard(cardName: 'Card 3')),
-                              ],
-                            ),
-                            SizedBox(
-                              height: 24.0,
-                            ),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(' - 일별 수익금 차트'),
-                                    Card(
-                                        child:
-                                            _SampleChart(chartName: 'chart 1')),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(' - 일별 예약현황 차트'),
-                                    Card(
-                                        child:
-                                            _SampleChart(chartName: 'chart 2')),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
+                  child: CircularProgressIndicator(),
+                )
+                    : SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Card(
+                              child: _SampleCard(
+                                cardName: 'Cash Deposit',
+                                cardContext: dashboardState.bookList
+                                    .where((e) => e.payStatus == 1)
+                                    .map((e) => e.payAmount)
+                                    .toList()
+                                    .fold(0.0,
+                                        (value, element) => value + element)
+                                    .toString(),
+                              )),
+                          Card(
+                              child: _SampleCard(
+                                cardName: 'Total Book Count',
+                                cardContext: dashboardState.bookList
+                                    .where((e) => e.payStatus == 1)
+                                    .length
+                                    .toString(),
+                              )),
+                          Card(
+                              child: _SampleCard(
+                                cardName: 'Today Book',
+                                cardContext: dashboardState.bookList
+                                    .where((e) =>
+                                e.createdAt.toString() ==
+                                    dashboardState.date)
+                                    .length
+                                    .toString(),
+                              )),
+                        ],
                       ),
+                      const SizedBox(
+                        height: 24.0,
+                      ),
+                      const Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(' - 일별 수익금 차트'),
+                              Card(
+                                  child:
+                                  _SampleChart(chartName: 'chart 1')),
+                            ],
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(' - 일별 예약현황 차트'),
+                              Card(
+                                  child:
+                                  _SampleChart(chartName: 'chart 2')),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
               ],
             ),
           ),
@@ -136,8 +162,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 }
 
 class _SampleCard extends StatelessWidget {
-  const _SampleCard({required this.cardName});
-  final String cardName;
+  _SampleCard({required this.cardName, required this.cardContext});
+
+  String cardName;
+  String cardContext;
 
   @override
   Widget build(BuildContext context) {
@@ -145,7 +173,12 @@ class _SampleCard extends StatelessWidget {
       width: 320.0,
       height: 100,
       child: Center(
-        child: Text(cardName),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [Text(cardName), Text(cardContext)],
+          ),
+        ),
       ),
     );
   }
@@ -153,6 +186,7 @@ class _SampleCard extends StatelessWidget {
 
 class _SampleChart extends StatelessWidget {
   const _SampleChart({required this.chartName});
+
   final String chartName;
 
   @override
@@ -166,3 +200,4 @@ class _SampleChart extends StatelessWidget {
     );
   }
 }
+
