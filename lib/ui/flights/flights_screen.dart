@@ -240,6 +240,8 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                           ),
                                         ),
                                         items: state.airportsName
+                                            .where((e) =>
+                                                e != state.selectedArrivalLoc)
                                             .map((item) => DropdownMenuItem(
                                                 value: item, child: Text(item)))
                                             .toList(),
@@ -283,18 +285,23 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                     width: MediaQuery.of(context).size.width *
                                         0.01,
                                   ),
-                                  const Icon(
-                                    Icons.more_horiz,
-                                    color: Colors.grey,
-                                  ),
-                                  const Icon(
-                                    Icons.flight_takeoff_outlined,
-                                    color: Colors.grey,
-                                  ),
-                                  const Icon(
-                                    Icons.more_horiz,
-                                    color: Colors.grey,
-                                  ),
+                                  // const Icon(
+                                  //   Icons.more_horiz,
+                                  //   color: Colors.grey,
+                                  // ),
+                                  // const Icon(
+                                  //   Icons.flight_takeoff_outlined,
+                                  //   color: Colors.grey,
+                                  // ),
+                                  // const Icon(
+                                  //   Icons.more_horiz,
+                                  //   color: Colors.grey,
+                                  // ),
+                                  IconButton(
+                                      onPressed: () {
+                                        viewModel.changeLocation();
+                                      },
+                                      icon: const Icon(Icons.swap_horiz)),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.01,
@@ -313,6 +320,8 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                           ),
                                         ),
                                         items: state.airportsName
+                                            .where((e) =>
+                                                e != state.selectedDepartureLoc)
                                             .map((item) => DropdownMenuItem(
                                                 value: item, child: Text(item)))
                                             .toList(),

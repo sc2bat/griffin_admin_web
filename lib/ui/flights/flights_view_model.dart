@@ -229,4 +229,11 @@ class FlightsViewModel extends ChangeNotifier {
       _signStatus.add(SignStatus.isNotSignedIn);
     }
   }
+
+  void changeLocation() {
+    _state = state.copyWith(
+        selectedArrivalLoc: state.selectedDepartureLoc,
+        selectedDepartureLoc: state.selectedArrivalLoc);
+    notifyListeners();
+  }
 }
