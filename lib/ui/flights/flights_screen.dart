@@ -5,6 +5,7 @@ import 'package:admin_web_app/data/model/flights/flights_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/ui/flights/flights_view_model.dart';
+import 'package:admin_web_app/ui/widget/button_widget.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -57,18 +58,22 @@ class _FlightsScreenState extends State<FlightsScreen> {
     final state = viewModel.state;
     return Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text('FLIGHT MANAGE PAGE')),
+          backgroundColor: const Color(0xFF1E082E),
+          centerTitle: true,
+          title: const Text(
+            'FLIGHT MANAGE PAGE',
+            style: TextStyle(color: Color(0xFFE8E1C9)),
+          ),
           actions: [
             Text(state.accountModel?.email ?? ''),
             const SizedBox(
               width: 8.0,
             ),
-            ElevatedButton(
-              onPressed: () {
-                viewModel.signOut();
-              },
-              child: const Text('SignOut'),
-            ),
+            ButtonWidget(
+                onTap: () {
+                  viewModel.signOut();
+                },
+                text: 'SignOut'),
           ],
         ),
         body: Row(
@@ -285,18 +290,6 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                     width: MediaQuery.of(context).size.width *
                                         0.01,
                                   ),
-                                  // const Icon(
-                                  //   Icons.more_horiz,
-                                  //   color: Colors.grey,
-                                  // ),
-                                  // const Icon(
-                                  //   Icons.flight_takeoff_outlined,
-                                  //   color: Colors.grey,
-                                  // ),
-                                  // const Icon(
-                                  //   Icons.more_horiz,
-                                  //   color: Colors.grey,
-                                  // ),
                                   IconButton(
                                       onPressed: () {
                                         viewModel.changeLocation();
@@ -368,20 +361,20 @@ class _FlightsScreenState extends State<FlightsScreen> {
                               children: [
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
-                                  child: ElevatedButton(
-                                    onPressed: () {
+                                  child: ButtonWidget(
+                                    onTap: () {
                                       viewModel.resetFlightsInfo();
                                     },
-                                    child: const Text('Reset'),
+                                    text: 'Reset',
                                   ),
                                 ),
                                 Padding(
                                   padding: const EdgeInsets.all(16.0),
-                                  child: ElevatedButton(
-                                    onPressed: () {
+                                  child: ButtonWidget(
+                                    onTap: () {
                                       viewModel.showFlightsInfo();
                                     },
-                                    child: const Text('Search'),
+                                    text: 'Search',
                                   ),
                                 ),
                               ],
