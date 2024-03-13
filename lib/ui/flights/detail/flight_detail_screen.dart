@@ -117,32 +117,27 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
                                 height:
                                     MediaQuery.of(context).size.height * 0.05),
                             const Text('Seat Status'),
-                            Row(
-                              children: [
-                                Text(
-                                    'Seats : ${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat - state.firstClass.length - state.businessClass.length - state.economyClass.length}'),
-                                Text(
-                                    '/ ${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat}'),
-                              ],
-                            ),
+                            Text(
+                                '-Total Seats :  ${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat + state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat}'),
+                            const Text('-Booked Seat'),
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
                                 children: [
                                   Text(
-                                      'First class : ${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat - state.firstClass.length}/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat}'),
+                                      'First class : ${state.firstClass.length}/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).firstClassSeat}'),
                                   SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width * 0.1,
                                   ),
                                   Text(
-                                      'Business class : ${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat - state.businessClass.length}/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat}'),
+                                      'Business class : ${state.businessClass.length}/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).businessClassSeat}'),
                                   SizedBox(
                                     width:
                                         MediaQuery.of(context).size.width * 0.1,
                                   ),
                                   Text(
-                                      'Economy class : ${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat - state.economyClass.length}/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat}')
+                                      'Economy class :  ${state.economyClass.length}/${state.airplanesList.firstWhere((e) => e.airplaneId == widget.flightsModel.airplaneId).economyClassSeat}')
                                 ],
                               ),
                             ),
