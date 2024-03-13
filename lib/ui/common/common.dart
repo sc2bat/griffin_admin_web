@@ -30,3 +30,13 @@ void showCustomDialog(
         );
       });
 }
+
+String formatDate(DateTime dateTime) {
+  String year = dateTime.year.toString();
+  String month = dateTime.month.toString();
+  String day = dateTime.day.toString();
+  String hour = dateTime.hour.toString();
+  String minute = dateTime.minute.toString();
+
+  return '$year년 $month월 $day일 $hour시 $minute분';
+}

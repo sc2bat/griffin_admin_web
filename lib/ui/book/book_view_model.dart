@@ -1,4 +1,5 @@
-import 'package:admin_web_app/data/model/book/book_model.dart';
+import 'package:admin_web_app/data/dto/book_dto.dart';
+import 'package:admin_web_app/data/model/book/book_result_model.dart';
 import 'package:admin_web_app/domain/repository/book_repository.dart';
 import 'package:admin_web_app/ui/book/book_state.dart';
 import 'package:admin_web_app/ui/common/constants.dart';
@@ -92,14 +93,14 @@ class BookViewModel with ChangeNotifier {
     String searchDate =
         '${bookState.selectedYear}${bookState.selectedMonth.toString().padLeft(2, '0')}${bookState.selectedDay.toString().padLeft(2, '0')}';
 
-    Map<String, dynamic> jsonData = {
-      'flight_date': searchDate,
-      'status': bookStatusConvert(bookState.selectedBookStatus),
-      'pay_status': payStatusConvert(bookState.selectedPayStatus),
-    };
+    BookResultDTO bookResultDTO = BookResultDTO(
+      flightDate: searchDate,
+      status: bookStatusConvert(bookState.selectedBookStatus),
+      payStatus: payStatusConvert(bookState.selectedPayStatus),
+    );
 
-    final List<BookModel> bookList =
-        await _bookRepository.getBookList(jsonData);
+    final List<BookResultModel> bookList =
+        await _bookRepository.getBookResultList(bookResultDTO);
 
     _bookState = bookState.copyWith(isLoading: false, bookList: bookList);
     notifyListeners();

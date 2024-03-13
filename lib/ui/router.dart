@@ -122,8 +122,15 @@ final router = GoRouter(
         GoRoute(
           name: 'detail',
           path: 'detail',
-          builder: (_, __) => const UserScreen(),
-          routes: const [],
+          builder: (_, state) {
+            final map = state.extra! as Map<String, dynamic>;
+            return ChangeNotifierProvider(
+              create: (_) => getIt<UserViewModel>(),
+              child: BookDetailScreen(
+                bookId: map["book_id"],
+              ),
+            );
+          },
         ),
       ],
     ),

@@ -1,4 +1,4 @@
-import 'package:admin_web_app/data/model/book/book_model.dart';
+import 'package:admin_web_app/data/model/book/book_result_model.dart';
 import 'package:admin_web_app/ui/book/book_state.dart';
 import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
@@ -63,6 +63,10 @@ class _BookScreenState extends State<BookScreen> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
+                              const Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Text('비행일'),
+                              ),
                               DropdownButtonHideUnderline(
                                 child: DropdownButton2<String>(
                                   isExpanded: true,
@@ -188,6 +192,10 @@ class _BookScreenState extends State<BookScreen> {
                                   ),
                                 ),
                               ),
+                              const Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Text('예약상태'),
+                              ),
                               DropdownButtonHideUnderline(
                                 child: DropdownButton2<String>(
                                   isExpanded: true,
@@ -228,6 +236,10 @@ class _BookScreenState extends State<BookScreen> {
                                     height: 40,
                                   ),
                                 ),
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.all(4.0),
+                                child: Text('결제상태'),
                               ),
                               DropdownButtonHideUnderline(
                                 child: DropdownButton2<String>(
@@ -282,24 +294,27 @@ class _BookScreenState extends State<BookScreen> {
                       ),
                       PaginatedDataTable(
                         columns: [
-                          const DataColumn(
-                            label: Text('No.'),
-                          ),
                           DataColumn(
                             label: const Text('예약 ID'),
                             onSort: (columnIndex, ascending) {},
                           ),
                           const DataColumn(
+                            label: Text('예약자 명'),
+                          ),
+                          const DataColumn(
                             label: Text('비행일'),
                           ),
                           const DataColumn(
-                            label: Text('비행편 ID'),
+                            label: Text('출발지'),
                           ),
                           const DataColumn(
-                            label: Text('예약자 ID'),
+                            label: Text('출발시각'),
                           ),
                           const DataColumn(
-                            label: Text('예약자 명'),
+                            label: Text('도착지'),
+                          ),
+                          const DataColumn(
+                            label: Text('도착시각'),
                           ),
                           const DataColumn(
                             label: Text('예약상태'),
@@ -308,13 +323,10 @@ class _BookScreenState extends State<BookScreen> {
                             label: Text('결제상태'),
                           ),
                           const DataColumn(
+                            label: Text('예약일'),
+                          ),
+                          const DataColumn(
                             label: Text('보기'),
-                          ),
-                          const DataColumn(
-                            label: Text('수정'),
-                          ),
-                          const DataColumn(
-                            label: Text('삭제'),
                           ),
                         ],
                         source: _BookData(
@@ -337,7 +349,7 @@ class _BookScreenState extends State<BookScreen> {
 
 class _BookData extends DataTableSource {
   final BuildContext context;
-  final List<BookModel> _bookList;
+  final List<BookResultModel> _bookList;
   _BookData(
     this.context,
     this._bookList,
@@ -348,13 +360,15 @@ class _BookData extends DataTableSource {
     final item = _bookList[index];
     return DataRow(cells: [
       DataCell(
-        Text(
-          '${index + 1}',
+        SelectableText(
+          '${item.bookId}',
+          showCursor: true,
+          onTap: () {},
         ),
       ),
       DataCell(
         SelectableText(
-          '${item.bookId}',
+          item.userName,
           showCursor: true,
           onTap: () {},
         ),
@@ -368,21 +382,28 @@ class _BookData extends DataTableSource {
       ),
       DataCell(
         SelectableText(
-          '${item.flightId}',
+          item.departureCode,
           showCursor: true,
           onTap: () {},
         ),
       ),
       DataCell(
         SelectableText(
-          '${item.userId}',
+          item.departureTime,
           showCursor: true,
           onTap: () {},
         ),
       ),
       DataCell(
         SelectableText(
-          item.userName,
+          item.arrivalCode,
+          showCursor: true,
+          onTap: () {},
+        ),
+      ),
+      DataCell(
+        SelectableText(
+          item.arrivalTime,
           showCursor: true,
           onTap: () {},
         ),
@@ -414,46 +435,21 @@ class _BookData extends DataTableSource {
         ),
       ),
       DataCell(
+        SelectableText(
+          '${item.createdAt.year}-${item.createdAt.month.toString().padLeft(2, '0')}-${item.createdAt.day.toString().padLeft(2, '0')}',
+          showCursor: true,
+          onTap: () {},
+        ),
+      ),
+      DataCell(
         IconButton(
           onPressed: () {
-            logger.info('press edit button ${item.bookId}');
             context.push('/book/detail', extra: {'bookId': item.bookId});
           },
           icon: const Icon(
             Icons.remove_red_eye_rounded,
           ),
           tooltip: 'detail',
-        ),
-      ),
-      DataCell(
-        IconButton(
-          onPressed: () {
-            logger.info('press edit button ${item.bookId}');
-          },
-          icon: const Icon(
-            Icons.edit,
-          ),
-          tooltip: 'update',
-        ),
-      ),
-      DataCell(
-        IconButton(
-          onPressed: () {
-            logger.info('press delete button ${item.bookId}');
-            showDialog(
-              context: context,
-              builder: (context) {
-                return AlertDialog(
-                  title: const Text('Delete Confirm'),
-                  content: Text('예약 ${item.bookId} 를 취소합니다.'),
-                );
-              },
-            );
-          },
-          icon: const Icon(
-            Icons.delete,
-          ),
-          tooltip: 'delete',
         ),
       ),
     ]);
