@@ -2,6 +2,7 @@ import 'package:admin_web_app/data/model/book/book_result_model.dart';
 import 'package:admin_web_app/ui/book/book_state.dart';
 import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
+import 'package:admin_web_app/ui/widget/button_widget.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -38,8 +39,12 @@ class _BookScreenState extends State<BookScreen> {
 
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF1E082E),
         title: const Center(
-          child: Text('BOOK MANAGE PAGE'),
+          child: Text(
+            'BOOK MANAGE PAGE',
+            style: TextStyle(color: Color(0xFFE8E1C9)),
+          ),
         ),
       ),
       body: Container(
@@ -282,12 +287,11 @@ class _BookScreenState extends State<BookScreen> {
                                   ),
                                 ),
                               ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  bookViewModel.getBookList();
-                                },
-                                child: const Text('조회'),
-                              ),
+                              ButtonWidget(
+                                  onTap: () {
+                                    bookViewModel.getBookList();
+                                  },
+                                  text: '조회'),
                             ],
                           ),
                         ),
@@ -350,6 +354,7 @@ class _BookScreenState extends State<BookScreen> {
 class _BookData extends DataTableSource {
   final BuildContext context;
   final List<BookResultModel> _bookList;
+
   _BookData(
     this.context,
     this._bookList,

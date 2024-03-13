@@ -18,6 +18,7 @@ class UserScreen extends StatefulWidget {
 
 class _UserScreenState extends State<UserScreen> {
   late int showingTooltip;
+
   @override
   void initState() {
     Future.microtask(() {
@@ -129,8 +130,14 @@ class _UserScreenState extends State<UserScreen> {
     ];
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: const Color(0xFF1E082E),
         title: const Center(
-          child: Text('USER MANAGE PAGE'),
+          child: Text(
+            'USER MANAGE PAGE',
+            style: TextStyle(
+              color: Color(0xFFE8E1C9),
+            ),
+          ),
         ),
       ),
       body: Container(
@@ -308,6 +315,7 @@ class _UserScreenState extends State<UserScreen> {
 class _UserData extends DataTableSource {
   final BuildContext context;
   final List<UserModel> _users;
+
   _UserData(
     this.context,
     this._users,
