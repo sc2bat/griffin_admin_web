@@ -5,4 +5,5 @@ abstract interface class PassportRepository {
   Future<PassportModel> getPassportOne(int passportId);
   Future<void> updatePassport(PassportModel passportModel);
   Future<void> deletePassport(PassportModel passportModel);
+  Future<PassportModel> getPassportByBookId(int bookId);
 }
