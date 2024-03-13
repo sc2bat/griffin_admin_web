@@ -50,11 +50,6 @@ final List<Map<String, dynamic>> menuList = [
     'name': 'user',
     'icon': const Icon(Icons.supervised_user_circle),
   },
-  // {
-  //   'menuid': '6',
-  //   'name': 'payment',
-  //   'icon': const Icon(Icons.payment),
-  // },
 ];
 
 Widget logoImage(context) {

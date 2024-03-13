@@ -58,7 +58,7 @@ class _AirportsScreenState extends State<AirportsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('GRIFFIN AIRPORT WEB PAGE'),
+          child: Text('AIRPORT MANAGE PAGE'),
         ),
         actions: [
           Text(state.accountModel?.email ?? ''),

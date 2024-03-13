@@ -39,7 +39,7 @@ class _BookScreenState extends State<BookScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Center(
-          child: Text('GRIFFIN ADMIN WEB PAGE'),
+          child: Text('BOOK MANAGE PAGE'),
         ),
       ),
       body: Container(

@@ -5,7 +5,6 @@ import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/ui/dashboard/dashboard_view_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -19,7 +18,6 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   StreamSubscription? _stremSubscription;
   late int showingTooltip;
-
 
   @override
   void initState() {
@@ -108,7 +106,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text('GRIFFIN ADMIN WEB PAGE'),
+        title: const Text('DASHBOARD PAGE'),
         actions: [
           Text(dashboardState.accountModel?.email ?? ''),
           const SizedBox(
@@ -347,10 +345,18 @@ class _SampleCard extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            children: [Text(cardName,), Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Text(cardContext,style: const TextStyle(fontWeight: FontWeight.bold),),
-            )],
+            children: [
+              Text(
+                cardName,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Text(
+                  cardContext,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              )
+            ],
           ),
         ),
       ),

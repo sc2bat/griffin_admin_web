@@ -11,7 +11,6 @@ import 'package:admin_web_app/ui/flights/detail/flight_detail_screen.dart';
 import 'package:admin_web_app/ui/flights/detail/flight_detail_view_model.dart';
 import 'package:admin_web_app/ui/flights/flights_screen.dart';
 import 'package:admin_web_app/ui/flights/flights_view_model.dart';
-import 'package:admin_web_app/ui/sample/my_home_page.dart';
 import 'package:admin_web_app/ui/sign/sign_screen.dart';
 import 'package:admin_web_app/ui/sign/sign_view_model.dart';
 import 'package:admin_web_app/ui/splash/splash_screen.dart';
@@ -123,26 +122,7 @@ final router = GoRouter(
         GoRoute(
           name: 'detail',
           path: 'detail',
-          builder: (_, __) => const MyHomePage(
-            title: 'userDetail',
-          ),
-          routes: const [],
-        ),
-      ],
-    ),
-    GoRoute(
-      name: 'payment',
-      path: '/payment',
-      builder: (_, __) => const MyHomePage(
-        title: 'payment',
-      ),
-      routes: [
-        GoRoute(
-          name: 'paymentDetail',
-          path: 'paymentDetail',
-          builder: (_, __) => const MyHomePage(
-            title: 'paymentDetail',
-          ),
+          builder: (_, __) => const UserScreen(),
           routes: const [],
         ),
       ],
