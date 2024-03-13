@@ -57,7 +57,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
     final state = viewModel.state;
     return Scaffold(
         appBar: AppBar(
-          title: const Center(child: Text('flights')),
+          title: const Center(child: Text('FLIGHT MANAGE PAGE')),
           actions: [
             Text(state.accountModel?.email ?? ''),
             const SizedBox(
