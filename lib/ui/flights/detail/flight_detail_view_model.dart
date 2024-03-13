@@ -101,7 +101,6 @@ class FlightDetailViewModel extends ChangeNotifier {
 
   Future<void> getClassSeats(FlightsModel flightsModel) async {
     final List<String> classSeats =
-        // state.bookList.map((e) => e.classSeat).toList();
         state.bookList
             .where((e) => e.flightId == flightsModel.flightId)
             .map((e) => e.classSeat)
