@@ -5,6 +5,7 @@ import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/ui/dashboard/dashboard_view_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -17,7 +18,8 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   StreamSubscription? _stremSubscription;
-  late int showingTooltip;
+  late int showingAmountTooltip;
+  late int showingBookTooltip;
 
   @override
   void initState() {
@@ -35,7 +37,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       });
     });
-    showingTooltip = -1;
+    showingAmountTooltip = -1;
+    showingBookTooltip = -1;
     super.initState();
   }
 
@@ -45,10 +48,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.dispose();
   }
 
-  BarChartGroupData generateGroupData(int x, int y) {
+  BarChartGroupData generateAmountGroupData(int x, int y) {
     return BarChartGroupData(
       x: x,
-      showingTooltipIndicators: showingTooltip == x ? [0] : [],
+      showingTooltipIndicators: showingAmountTooltip == x ? [0] : [],
+      barRods: [
+        BarChartRodData(
+          toY: y.toDouble(),
+        ),
+      ],
+    );
+  }
+
+  BarChartGroupData generateBookGroupData(int x, int y) {
+    return BarChartGroupData(
+      x: x,
+      showingTooltipIndicators: showingBookTooltip == x ? [0] : [],
       barRods: [
         BarChartRodData(
           toY: y.toDouble(),
@@ -198,7 +213,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       child: BarChart(BarChartData(
                                           barGroups: List.generate(
                                             dashboardState.cashList.length,
-                                            (index) => generateGroupData(
+                                            (index) => generateAmountGroupData(
                                               index,
                                               dashboardState.cashList[index]
                                                   ['pay_amount'],
@@ -238,11 +253,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                     final x = response.spot!
                                                         .touchedBarGroup.x;
                                                     final isShowing =
-                                                        showingTooltip == x;
+                                                        showingAmountTooltip ==
+                                                            x;
                                                     if (isShowing) {
-                                                      showingTooltip = -1;
+                                                      showingAmountTooltip = -1;
                                                     } else {
-                                                      showingTooltip = x;
+                                                      showingAmountTooltip = x;
                                                     }
                                                   });
                                                 }
@@ -261,7 +277,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                       child: BarChart(BarChartData(
                                           barGroups: List.generate(
                                             dashboardState.bookCountList.length,
-                                            (index) => generateGroupData(
+                                            (index) => generateBookGroupData(
                                               index,
                                               dashboardState
                                                       .bookCountList[index]
@@ -302,11 +318,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                                     final x = response.spot!
                                                         .touchedBarGroup.x;
                                                     final isShowing =
-                                                        showingTooltip == x;
+                                                        showingBookTooltip == x;
                                                     if (isShowing) {
-                                                      showingTooltip = -1;
+                                                      showingBookTooltip = -1;
                                                     } else {
-                                                      showingTooltip = x;
+                                                      showingBookTooltip = x;
                                                     }
                                                   });
                                                 }
@@ -355,7 +371,7 @@ class _SampleCard extends StatelessWidget {
                   cardContext,
                   style: const TextStyle(fontWeight: FontWeight.bold),
                 ),
-              )
+              ),
             ],
           ),
         ),
