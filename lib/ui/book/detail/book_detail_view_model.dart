@@ -1,4 +1,3 @@
-import 'package:admin_web_app/data/model/book/book_model.dart';
 import 'package:admin_web_app/domain/repository/book_repository.dart';
 import 'package:admin_web_app/domain/repository/passport_repository.dart';
 import 'package:admin_web_app/ui/book/detail/book_detail_state.dart';
@@ -21,12 +20,24 @@ class BookDetailViewModel extends ChangeNotifier {
     _state = state.copyWith(isLoading: true);
     notifyListeners();
 
-    BookModel bookModel = await getBookData(bookId);
-    _state = state.copyWith(isLoading: false, bookModel: bookModel);
+    await getBookData(bookId);
+    await getPassportData(bookId);
+
+    _state = state.copyWith(isLoading: false);
     notifyListeners();
   }
 
-  Future<BookModel> getBookData(int bookId) async {
-    return await _bookRepository.getBookOne(bookId);
+  Future<void> getBookData(int bookId) async {
+    final bookModel = await _bookRepository.getBookOne(bookId);
+
+    _state = state.copyWith(bookModel: bookModel);
+    notifyListeners();
+  }
+
+  Future<void> getPassportData(int bookId) async {
+    final passportModel = await _passportRepository.getPassportOne(bookId);
+
+    _state = state.copyWith(passportModel: passportModel);
+    notifyListeners();
   }
 }

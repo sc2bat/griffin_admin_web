@@ -25,7 +25,7 @@ class _BookDetailScreenState extends State<BookDetailScreen> {
     logger.info(widget.bookId);
     Future.microtask(() {
       final bookDetailViewModel = context.read<BookDetailViewModel>();
-      // bookDetailViewModel.init(widget.bookId);
+      bookDetailViewModel.init(widget.bookId);
     });
     super.initState();
   }
