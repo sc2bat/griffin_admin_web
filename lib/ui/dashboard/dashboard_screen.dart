@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/ui/dashboard/dashboard_view_model.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 
@@ -16,6 +18,9 @@ class DashboardScreen extends StatefulWidget {
 
 class _DashboardScreenState extends State<DashboardScreen> {
   StreamSubscription? _stremSubscription;
+  late int showingTooltip;
+
+
   @override
   void initState() {
     Future.microtask(() {
@@ -32,6 +37,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       });
     });
+    showingTooltip = -1;
     super.initState();
   }
 
@@ -39,6 +45,59 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void dispose() {
     _stremSubscription?.cancel();
     super.dispose();
+  }
+
+  BarChartGroupData generateGroupData(int x, int y) {
+    return BarChartGroupData(
+      x: x,
+      showingTooltipIndicators: showingTooltip == x ? [0] : [],
+      barRods: [
+        BarChartRodData(
+          toY: y.toDouble(),
+        ),
+      ],
+    );
+  }
+
+  Widget bottomTitles(double value, TitleMeta meta) {
+    const style = TextStyle(fontSize: 10);
+    String text;
+    DateTime now = DateTime.now();
+    switch (value.toInt()) {
+      case 0:
+      case 1:
+      case 2:
+      case 3:
+      case 4:
+      case 5:
+      case 6:
+        text =
+            '[ ${now.subtract(Duration(days: 6 - value.toInt())).month} / ${now.subtract(Duration(days: 6 - value.toInt())).day} ]';
+        break;
+      default:
+        text = 'none';
+        break;
+    }
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: Text(text, style: style),
+    );
+  }
+
+  Widget leftTitles(double value, TitleMeta meta) {
+    if (value == meta.max) {
+      return Container();
+    }
+    const style = TextStyle(
+      fontSize: 10,
+    );
+    return SideTitleWidget(
+      axisSide: meta.axisSide,
+      child: Text(
+        meta.formattedValue,
+        style: style,
+      ),
+    );
   }
 
   @override
@@ -83,7 +142,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ? const Center(
                         child: CircularProgressIndicator(),
                       )
-                    : const SingleChildScrollView(
+                    : SingleChildScrollView(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisSize: MainAxisSize.min,
@@ -92,35 +151,173 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Card(child: _SampleCard(cardName: 'Card 1')),
-                                Card(child: _SampleCard(cardName: 'Card 2')),
-                                Card(child: _SampleCard(cardName: 'Card 3')),
+                                Card(
+                                    child: _SampleCard(
+                                  cardName: 'Cash Deposit',
+                                  cardContext: dashboardState.bookList
+                                      .where((e) => e.payStatus == 1)
+                                      .map((e) => e.payAmount)
+                                      .toList()
+                                      .fold(0.0,
+                                          (value, element) => value + element)
+                                      .toString(),
+                                )),
+                                Card(
+                                    child: _SampleCard(
+                                  cardName: 'Total Book Count',
+                                  cardContext: dashboardState.bookList
+                                      .where((e) => e.status == 1)
+                                      .length
+                                      .toString(),
+                                )),
+                                Card(
+                                    child: _SampleCard(
+                                  cardName: 'Today Book',
+                                  cardContext: dashboardState.bookList
+                                      .where((e) =>
+                                          e.createdAt
+                                                  .toString()
+                                                  .split(' ')[0] ==
+                                              dashboardState.date &&
+                                          e.status == 1)
+                                      .length
+                                      .toString(),
+                                )),
                               ],
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 24.0,
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(' - 일별 수익금 차트'),
-                                    Card(
-                                        child:
-                                            _SampleChart(chartName: 'chart 1')),
-                                  ],
-                                ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(' - 일별 예약현황 차트'),
-                                    Card(
-                                        child:
-                                            _SampleChart(chartName: 'chart 2')),
-                                  ],
-                                ),
+                                Column(children: [
+                                  const Text(' - 일별 수익금 차트'),
+                                  SizedBox(
+                                    height: 224.0,
+                                    child: AspectRatio(
+                                      aspectRatio: 2.0,
+                                      child: BarChart(BarChartData(
+                                          barGroups: List.generate(
+                                            dashboardState.cashList.length,
+                                            (index) => generateGroupData(
+                                              index,
+                                              dashboardState.cashList[index]
+                                                  ['pay_amount'],
+                                            ),
+                                          ),
+                                          titlesData: FlTitlesData(
+                                            show: true,
+                                            topTitles: const AxisTitles(
+                                              sideTitles:
+                                                  SideTitles(showTitles: false),
+                                            ),
+                                            rightTitles: const AxisTitles(
+                                              sideTitles:
+                                                  SideTitles(showTitles: false),
+                                            ),
+                                            bottomTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                showTitles: true,
+                                                getTitlesWidget: bottomTitles,
+                                              ),
+                                            ),
+                                            leftTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                reservedSize: 60,
+                                                showTitles: true,
+                                                getTitlesWidget: leftTitles,
+                                              ),
+                                            ),
+                                          ),
+                                          barTouchData: BarTouchData(
+                                              enabled: true,
+                                              handleBuiltInTouches: false,
+                                              touchCallback: (event, response) {
+                                                if (response != null &&
+                                                    event is FlTapUpEvent) {
+                                                  setState(() {
+                                                    final x = response.spot!
+                                                        .touchedBarGroup.x;
+                                                    final isShowing =
+                                                        showingTooltip == x;
+                                                    if (isShowing) {
+                                                      showingTooltip = -1;
+                                                    } else {
+                                                      showingTooltip = x;
+                                                    }
+                                                  });
+                                                }
+                                              }))),
+                                    ),
+                                  ),
+
+                                  // BarChart(BarChartData())
+                                ]),
+                                Column(children: [
+                                  const Text(' - 일별 예약 현황 차트'),
+                                  SizedBox(
+                                    height: 224.0,
+                                    child: AspectRatio(
+                                      aspectRatio: 2.0,
+                                      child: BarChart(BarChartData(
+                                          barGroups: List.generate(
+                                            dashboardState.bookCountList.length,
+                                            (index) => generateGroupData(
+                                              index,
+                                              dashboardState
+                                                      .bookCountList[index]
+                                                  ['book_count'],
+                                            ),
+                                          ),
+                                          titlesData: FlTitlesData(
+                                            show: true,
+                                            topTitles: const AxisTitles(
+                                              sideTitles:
+                                                  SideTitles(showTitles: false),
+                                            ),
+                                            rightTitles: const AxisTitles(
+                                              sideTitles:
+                                                  SideTitles(showTitles: false),
+                                            ),
+                                            bottomTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                showTitles: true,
+                                                getTitlesWidget: bottomTitles,
+                                              ),
+                                            ),
+                                            leftTitles: AxisTitles(
+                                              sideTitles: SideTitles(
+                                                reservedSize: 60,
+                                                showTitles: true,
+                                                getTitlesWidget: leftTitles,
+                                              ),
+                                            ),
+                                          ),
+                                          barTouchData: BarTouchData(
+                                              enabled: true,
+                                              handleBuiltInTouches: false,
+                                              touchCallback: (event, response) {
+                                                if (response != null &&
+                                                    event is FlTapUpEvent) {
+                                                  setState(() {
+                                                    final x = response.spot!
+                                                        .touchedBarGroup.x;
+                                                    final isShowing =
+                                                        showingTooltip == x;
+                                                    if (isShowing) {
+                                                      showingTooltip = -1;
+                                                    } else {
+                                                      showingTooltip = x;
+                                                    }
+                                                  });
+                                                }
+                                              }))),
+                                    ),
+                                  ),
+
+                                  // BarChart(BarChartData())
+                                ])
                               ],
                             ),
                           ],
@@ -136,8 +333,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
 }
 
 class _SampleCard extends StatelessWidget {
-  const _SampleCard({required this.cardName});
-  final String cardName;
+  _SampleCard({required this.cardName, required this.cardContext});
+
+  String cardName;
+  String cardContext;
 
   @override
   Widget build(BuildContext context) {
@@ -145,23 +344,15 @@ class _SampleCard extends StatelessWidget {
       width: 320.0,
       height: 100,
       child: Center(
-        child: Text(cardName),
-      ),
-    );
-  }
-}
-
-class _SampleChart extends StatelessWidget {
-  const _SampleChart({required this.chartName});
-  final String chartName;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 320.0,
-      height: 100,
-      child: Center(
-        child: Text(chartName),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [Text(cardName,), Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Text(cardContext,style: const TextStyle(fontWeight: FontWeight.bold),),
+            )],
+          ),
+        ),
       ),
     );
   }

@@ -23,8 +23,6 @@ class _FlightsScreenState extends State<FlightsScreen> {
   final arrivalLocFilter = TextEditingController();
   StreamSubscription? _streamSubscription;
 
-
-
   @override
   void initState() {
     Future.microtask(() {
@@ -59,7 +57,7 @@ class _FlightsScreenState extends State<FlightsScreen> {
     final state = viewModel.state;
     return Scaffold(
         appBar: AppBar(
-          title: const Text('flights'),
+          title: const Center(child: Text('flights')),
           actions: [
             Text(state.accountModel?.email ?? ''),
             const SizedBox(
@@ -242,6 +240,8 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                           ),
                                         ),
                                         items: state.airportsName
+                                            .where((e) =>
+                                                e != state.selectedArrivalLoc)
                                             .map((item) => DropdownMenuItem(
                                                 value: item, child: Text(item)))
                                             .toList(),
@@ -285,18 +285,23 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                     width: MediaQuery.of(context).size.width *
                                         0.01,
                                   ),
-                                  const Icon(
-                                    Icons.more_horiz,
-                                    color: Colors.grey,
-                                  ),
-                                  const Icon(
-                                    Icons.flight_takeoff_outlined,
-                                    color: Colors.grey,
-                                  ),
-                                  const Icon(
-                                    Icons.more_horiz,
-                                    color: Colors.grey,
-                                  ),
+                                  // const Icon(
+                                  //   Icons.more_horiz,
+                                  //   color: Colors.grey,
+                                  // ),
+                                  // const Icon(
+                                  //   Icons.flight_takeoff_outlined,
+                                  //   color: Colors.grey,
+                                  // ),
+                                  // const Icon(
+                                  //   Icons.more_horiz,
+                                  //   color: Colors.grey,
+                                  // ),
+                                  IconButton(
+                                      onPressed: () {
+                                        viewModel.changeLocation();
+                                      },
+                                      icon: const Icon(Icons.swap_horiz)),
                                   SizedBox(
                                     width: MediaQuery.of(context).size.width *
                                         0.01,
@@ -315,6 +320,8 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                           ),
                                         ),
                                         items: state.airportsName
+                                            .where((e) =>
+                                                e != state.selectedDepartureLoc)
                                             .map((item) => DropdownMenuItem(
                                                 value: item, child: Text(item)))
                                             .toList(),
@@ -414,12 +421,13 @@ class _FlightsScreenState extends State<FlightsScreen> {
                                 ),
                                 const DataColumn(
                                   label: Text('Arrival Name'),
-                                ),const DataColumn(
+                                ),
+                                const DataColumn(
                                   label: Text('Detail'),
                                 ),
                               ],
-                              source: FlightsDataTableSource(
-                                  state.flightInfo, state.airportsInfo,context),
+                              source: FlightsDataTableSource(state.flightInfo,
+                                  state.airportsInfo, context),
                               rowsPerPage: 10,
                               horizontalMargin: 60,
                             ),
@@ -457,7 +465,15 @@ class FlightsDataTableSource extends DataTableSource {
           '${flight.arrivalTime.substring(0, 2)}:${flight.arrivalTime.substring(2)}')),
       DataCell(Text(departureName.airportName)),
       DataCell(Text(arrivalName.airportName)),
-      DataCell(IconButton(onPressed: (){context.push('/flights/flightDetail',extra: {'flightsModel': flight,'departureAirportModel':departureName,'arrivalAirportModel':arrivalName});}, icon: const Icon(Icons.remove_red_eye_rounded))),
+      DataCell(IconButton(
+          onPressed: () {
+            context.push('/flights/flightDetail', extra: {
+              'flightsModel': flight,
+              'departureAirportModel': departureName,
+              'arrivalAirportModel': arrivalName
+            });
+          },
+          icon: const Icon(Icons.remove_red_eye_rounded))),
     ]);
   }
 
