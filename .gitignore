@@ -154,3 +154,6 @@ app.*.map.json
 
 # bak
 *.bak
+
+# zip
+/lib/env/*.zip
