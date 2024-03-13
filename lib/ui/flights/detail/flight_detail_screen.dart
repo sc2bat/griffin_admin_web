@@ -38,7 +38,11 @@ class _FlightDetailScreenState extends State<FlightDetailScreen> {
     final state = viewModel.state;
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flight Detail'),
+        backgroundColor: const Color(0xFF1E082E),
+        title: const Text(
+          'FLIGHT DETAIL',
+          style: TextStyle(color: Color(0xFFE8E1C9)),
+        ),
       ),
       body: Row(
         children: [
