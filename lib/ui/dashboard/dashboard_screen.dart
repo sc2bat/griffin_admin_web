@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:admin_web_app/ui/dashboard/dashboard_view_model.dart';
-import 'package:admin_web_app/ui/widget/button_widget.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
-
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+
+import '../common/widget/common_app_bar_widget.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -116,24 +116,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final dashboardState = dashboardViewModel.dashboardState;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1E082E),
-        centerTitle: true,
-        title: const Text(
-          'DASHBOARD PAGE',
-          style: TextStyle(color: Color(0xFFE8E1C9)),
-        ),
-        actions: [
-          Text(dashboardState.accountModel?.email ?? ''),
-          const SizedBox(
-            width: 8.0,
-          ),
-          ButtonWidget(
-              onTap: () {
-                dashboardViewModel.signOut();
-              },
-              text: 'SignOut'),
-        ],
+      appBar: CommonAppBarWidget(
+        title: 'DASHBOARD',
+        email: dashboardState.accountModel?.email ?? '',
+        signOutFunction: () => dashboardViewModel.signOut(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),

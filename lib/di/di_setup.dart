@@ -81,6 +81,8 @@ void diSetup() {
     ..registerFactory<BookViewModel>(
       () => BookViewModel(
         bookRepository: getIt<BookRepository>(),
+        signRepository: getIt<SignRepository>(),
+        sessionRepository: getIt<SessionRepository>(),
       ),
     )
     ..registerFactory<BookDetailViewModel>(
