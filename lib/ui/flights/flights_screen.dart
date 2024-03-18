@@ -4,6 +4,7 @@ import 'package:admin_web_app/data/model/airports/airports_model.dart';
 import 'package:admin_web_app/data/model/flights/flights_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:admin_web_app/ui/common/enums.dart';
+import 'package:admin_web_app/ui/common/widget/common_app_bar_widget.dart';
 import 'package:admin_web_app/ui/flights/flights_view_model.dart';
 import 'package:admin_web_app/ui/widget/button_widget.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
@@ -57,24 +58,10 @@ class _FlightsScreenState extends State<FlightsScreen> {
     final viewModel = context.watch<FlightsViewModel>();
     final state = viewModel.state;
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: const Color(0xFF1E082E),
-          centerTitle: true,
-          title: const Text(
-            'FLIGHT MANAGE PAGE',
-            style: TextStyle(color: Color(0xFFE8E1C9)),
-          ),
-          actions: [
-            Text(state.accountModel?.email ?? ''),
-            const SizedBox(
-              width: 8.0,
-            ),
-            ButtonWidget(
-                onTap: () {
-                  viewModel.signOut();
-                },
-                text: 'SignOut'),
-          ],
+        appBar: CommonAppBarWidget(
+          title: 'FLIGHT',
+          email: state.accountModel?.email ?? '',
+          signOutFunction: () => viewModel.signOut(),
         ),
         body: Row(
           children: [

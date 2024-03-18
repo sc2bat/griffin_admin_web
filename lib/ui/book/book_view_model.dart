@@ -1,15 +1,31 @@
+import 'dart:async';
+
 import 'package:admin_web_app/data/dto/book_dto.dart';
+import 'package:admin_web_app/data/model/account/account_model.dart';
 import 'package:admin_web_app/data/model/book/book_result_model.dart';
 import 'package:admin_web_app/domain/repository/book_repository.dart';
+import 'package:admin_web_app/domain/repository/session_repository.dart';
+import 'package:admin_web_app/domain/repository/sign_repository.dart';
 import 'package:admin_web_app/ui/book/book_state.dart';
 import 'package:admin_web_app/ui/common/constants.dart';
+import 'package:admin_web_app/ui/common/enums.dart';
 import 'package:flutter/material.dart';
 
 class BookViewModel with ChangeNotifier {
+  final SignRepository _signRepository;
+  final SessionRepository _sessionRepository;
   final BookRepository _bookRepository;
   BookViewModel({
+    required SignRepository signRepository,
+    required SessionRepository sessionRepository,
     required BookRepository bookRepository,
-  }) : _bookRepository = bookRepository;
+  })  : _signRepository = signRepository,
+        _sessionRepository = sessionRepository,
+        _bookRepository = bookRepository;
+
+  final StreamController<SignStatus> _signStatus = StreamController();
+
+  Stream<SignStatus> get signResult => _signStatus.stream;
 
   BookState _bookState = BookState();
   BookState get bookState => _bookState;
@@ -24,6 +40,29 @@ class BookViewModel with ChangeNotifier {
 
     // 예약 데이터 불러오기
     await getBookList();
+  }
+
+  Future<void> checkSession() async {
+    try {
+      final AccountModel accountModel = await _sessionRepository.getSession();
+      _signStatus.add(SignStatus.isSignedIn);
+      _bookState = bookState.copyWith(accountModel: accountModel);
+    } catch (e) {
+      await _sessionRepository.deleteSession();
+      _signStatus.add(SignStatus.isNotSignedIn);
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      _bookState = bookState.copyWith(accountModel: null);
+      notifyListeners();
+      await _sessionRepository.deleteSession();
+      await _signRepository.signOut();
+      _signStatus.add(SignStatus.isNotSignedIn);
+    } catch (e) {
+      _signStatus.add(SignStatus.isNotSignedIn);
+    }
   }
 
   void initSelectOption() {

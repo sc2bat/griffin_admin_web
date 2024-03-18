@@ -1,7 +1,12 @@
+import 'dart:async';
+
+import 'package:admin_web_app/data/model/account/account_model.dart';
 import 'package:admin_web_app/data/model/book/book_result_model.dart';
 import 'package:admin_web_app/ui/book/book_state.dart';
 import 'package:admin_web_app/ui/book/book_view_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
+import 'package:admin_web_app/ui/common/enums.dart';
+import 'package:admin_web_app/ui/common/widget/common_app_bar_widget.dart';
 import 'package:admin_web_app/ui/widget/button_widget.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -17,18 +22,33 @@ class BookScreen extends StatefulWidget {
 }
 
 class _BookScreenState extends State<BookScreen> {
+  StreamSubscription? _stremSubscription;
+  late AccountModel accountModel;
+
   @override
   void initState() {
     Future.microtask(() {
       final BookViewModel bookViewModel = context.read<BookViewModel>();
 
       bookViewModel.init();
+
+      _stremSubscription = bookViewModel.signResult.listen((event) {
+        switch (event) {
+          case SignStatus.signSuccess:
+          case SignStatus.signFail:
+          case SignStatus.isSignedIn:
+            context.go('/book');
+          case SignStatus.isNotSignedIn:
+            context.go('/sign');
+        }
+      });
     });
     super.initState();
   }
 
   @override
   void dispose() {
+    _stremSubscription?.cancel();
     super.dispose();
   }
 
@@ -38,14 +58,10 @@ class _BookScreenState extends State<BookScreen> {
     final BookState bookState = bookViewModel.bookState;
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1E082E),
-        title: const Center(
-          child: Text(
-            'BOOK MANAGE PAGE',
-            style: TextStyle(color: Color(0xFFE8E1C9)),
-          ),
-        ),
+      appBar: CommonAppBarWidget(
+        title: 'BOOK',
+        email: bookState.accountModel?.email ?? '',
+        signOutFunction: () => bookViewModel.signOut(),
       ),
       body: Container(
         child: Padding(

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:admin_web_app/ui/airports/airports_view_model.dart';
 import 'package:admin_web_app/ui/common/common_menu_list_widget.dart';
 import 'package:admin_web_app/ui/common/enums.dart';
-import 'package:admin_web_app/ui/widget/button_widget.dart';
+import 'package:admin_web_app/ui/common/widget/common_app_bar_widget.dart';
 import 'package:admin_web_app/utils/simple_logger.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
@@ -57,26 +57,10 @@ class _AirportsScreenState extends State<AirportsScreen> {
     final viewModel = context.watch<AirportsViewModel>();
     final state = viewModel.state;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF1E082E),
-        centerTitle: true,
-        title: const Text(
-          'AIRPORT MANAGE PAGE',
-          style: TextStyle(
-            color: Color(0xFFE8E1C9),
-          ),
-        ),
-        actions: [
-          Text(state.accountModel?.email ?? ''),
-          const SizedBox(
-            width: 8.0,
-          ),
-          ButtonWidget(
-              onTap: () {
-                viewModel.signOut();
-              },
-              text: 'SignOut'),
-        ],
+      appBar: CommonAppBarWidget(
+        title: 'AIRPORT',
+        email: state.accountModel?.email ?? '',
+        signOutFunction: () => viewModel.signOut(),
       ),
       body: Container(
         child: Padding(
